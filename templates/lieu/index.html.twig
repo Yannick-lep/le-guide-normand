@@ -1,3 +1,139 @@
 {% extends 'base.html.twig' %}
-{% block title %}Bons Plans{% endblock %}
-{% block body %}<div class="container py-5"><h1>Bons Plans</h1></div>{% endblock %}
+
+{% block title %}Bons Plans — Le Guide Normand{% endblock %}
+
+{% block body %}
+
+{# ── EN-TÊTE ── #}
+<div style="background: linear-gradient(135deg, var(--normand-red), #A52A2A); color: white; padding: 3rem 0;">
+    <div class="container">
+        <h1 style="font-family: 'Playfair Display', serif;" class="mb-2">
+            <i class="fa-solid fa-map-location-dot me-2"></i>Bons Plans
+        </h1>
+        <p class="opacity-75 mb-0">Découvrez les meilleures adresses partagées par la communauté</p>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row g-4">
+
+        {# ── SIDEBAR FILTRES ── #}
+        <div class="col-lg-3">
+
+            {# Recherche #}
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3"><i class="fa-solid fa-magnifying-glass me-2"></i>Rechercher</h6>
+                    <form method="get">
+                        {% if categorieSlug %}
+                            <input type="hidden" name="categorie" value="{{ categorieSlug }}">
+                        {% endif %}
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control form-control-sm"
+                                   placeholder="Nom, lieu..." value="{{ recherche ?? '' }}">
+                            <button class="btn btn-normand btn-sm" type="submit">
+                                <i class="fa-solid fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {# Catégories #}
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3"><i class="fa-solid fa-tags me-2"></i>Catégories</h6>
+                    <div class="d-flex flex-column gap-1">
+                        <a href="{{ path('app_lieu_index') }}"
+                           class="btn btn-sm text-start {{ not categorieSlug ? 'btn-normand' : 'btn-outline-secondary' }}">
+                            <i class="fa-solid fa-grid-2 me-2"></i>Toutes les catégories
+                        </a>
+                        {% for categorie in categories %}
+                        <a href="{{ path('app_lieu_index', {categorie: categorie.slug}) }}"
+                           class="btn btn-sm text-start {{ categorieSlug == categorie.slug ? 'btn-normand' : 'btn-outline-secondary' }}">
+                            <i class="fa-solid {{ categorie.icone ?? 'fa-tag' }} me-2"></i>
+                            {{ categorie.nom }}
+                            <span class="badge bg-secondary ms-auto">{{ categorie.lieux|length }}</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {# ── LISTE DES LIEUX ── #}
+        <div class="col-lg-9">
+
+            {# Résultats #}
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <span class="text-muted">
+                        <strong>{{ lieux|length }}</strong> résultat{{ lieux|length > 1 ? 's' : '' }}
+                        {% if categorieSlug %} dans <strong>{{ categorieSlug }}</strong>{% endif %}
+                        {% if recherche %} pour <strong>"{{ recherche }}"</strong>{% endif %}
+                    </span>
+                </div>
+                {% if app.user %}
+                <a href="#" class="btn btn-normand btn-sm">
+                    <i class="fa-solid fa-plus me-1"></i>Publier un lieu
+                </a>
+                {% endif %}
+            </div>
+
+            {% if lieux is empty %}
+            <div class="text-center py-5 text-muted">
+                <i class="fa-solid fa-map-location-dot fa-4x mb-3 opacity-25"></i>
+                <h5>Aucun lieu trouvé</h5>
+                <p>Essayez une autre catégorie ou un autre mot-clé.</p>
+                <a href="{{ path('app_lieu_index') }}" class="btn btn-normand">
+                    Voir tous les lieux
+                </a>
+            </div>
+            {% else %}
+            <div class="row g-3">
+                {% for lieu in lieux %}
+                <div class="col-md-6 col-xl-4">
+                    <div class="card card-normand h-100">
+                        <div class="card-img-top d-flex align-items-center justify-content-center"
+                             style="height: 160px; background: linear-gradient(135deg, #8B1A1A, #2D5A27);">
+                            <i class="fa-solid {{ lieu.categorie.icone ?? 'fa-map-pin' }} fa-3x text-white opacity-50"></i>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            {% if lieu.categorie %}
+                            <span class="badge-categorie mb-2 d-inline-block">
+                                <i class="fa-solid {{ lieu.categorie.icone ?? 'fa-tag' }} me-1"></i>
+                                {{ lieu.categorie.nom }}
+                            </span>
+                            {% endif %}
+                            <h6 class="fw-bold mb-1">{{ lieu.titre }}</h6>
+                            <p class="text-muted small flex-grow-1 mb-2">
+                                {{ lieu.description|slice(0, 90) }}...
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="fa-solid fa-map-pin me-1"></i>
+                                    {{ lieu.adresse ?? 'Normandie' }}
+                                </small>
+                                <a href="#" class="btn btn-normand btn-sm">
+                                    Voir <i class="fa-solid fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <small class="text-muted">
+                                <i class="fa-solid fa-eye me-1"></i>{{ lieu.nombreVues }} vues
+                                · <i class="fa-solid fa-clock me-1"></i>{{ lieu.createdAt|date('d/m/Y') }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

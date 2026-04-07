@@ -16,6 +16,27 @@ class LieuRepository extends ServiceEntityRepository
         parent::__construct($registry, Lieu::class);
     }
 
+    public function findByFiltres(?string $categorieSlug = null, ?string $recherche = null): array
+    {
+        $qb = $this->createQueryBuilder('l')
+            ->leftJoin('l.categorie', 'c')
+            ->addSelect('c')
+            ->where('l.estValide = true')
+            ->orderBy('l.createdAt', 'DESC');
+
+        if ($categorieSlug) {
+            $qb->andWhere('c.slug = :slug')
+                ->setParameter('slug', $categorieSlug);
+        }
+
+        if ($recherche) {
+            $qb->andWhere('l.titre LIKE :q OR l.description LIKE :q OR l.adresse LIKE :q')
+                ->setParameter('q', '%' . $recherche . '%');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     //    /**
     //     * @return Lieu[] Returns an array of Lieu objects
     //     */

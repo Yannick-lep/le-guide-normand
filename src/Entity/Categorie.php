@@ -19,7 +19,7 @@ class Categorie
     #[ORM\Column(length: 100)]
     private ?string $nom = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(length: 150)]
