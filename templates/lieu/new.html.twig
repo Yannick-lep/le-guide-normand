@@ -1,0 +1,151 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Publier un lieu — Le Guide Normand{% endblock %}
+
+{% block body %}
+
+<div style="background: linear-gradient(135deg, var(--normand-red), #A52A2A); color: white; padding: 2.5rem 0; position: relative; overflow: hidden;">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-2">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_home') }}" class="text-white-50 text-decoration-none">Accueil</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_lieu_index') }}" class="text-white-50 text-decoration-none">Bons Plans</a>
+                </li>
+                <li class="breadcrumb-item active text-white">Publier un lieu</li>
+            </ol>
+        </nav>
+        <h1 style="font-family: 'Playfair Display', serif;">
+            <i class="fa-solid fa-plus me-2"></i>Publier un lieu
+        </h1>
+        <p class="opacity-75 mb-0">Partagez un bon plan avec la communauté normande</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-lg-5">
+
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                    <h5 class="fw-bold mb-4" style="color: var(--normand-red);">
+                        <i class="fa-solid fa-circle-info me-2"></i>Informations générales
+                    </h5>
+
+                    <div class="mb-4">
+                        {{ form_label(form.titre) }}
+                        {{ form_widget(form.titre) }}
+                        {{ form_errors(form.titre) }}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form_label(form.categorie) }}
+                        {{ form_widget(form.categorie) }}
+                        {{ form_errors(form.categorie) }}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description) }}
+                        {{ form_errors(form.description) }}
+                        <div class="form-text">Minimum 20 caractères. Décrivez comment accéder au lieu, ce qu'on peut y faire...</div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="fw-bold mb-4" style="color: var(--normand-red);">
+                        <i class="fa-solid fa-map-pin me-2"></i>Localisation
+                    </h5>
+
+                    <div class="mb-3">
+                        {{ form_label(form.adresse) }}
+                        {{ form_widget(form.adresse) }}
+                        {{ form_errors(form.adresse) }}
+                    </div>
+
+                    <div class="alert alert-info d-flex gap-2 mb-3">
+                        <i class="fa-solid fa-circle-info mt-1"></i>
+                        <div>
+                            <strong>Astuce :</strong> Cliquez sur la carte ci-dessous pour placer le marqueur et remplir automatiquement les coordonnées GPS.
+                        </div>
+                    </div>
+
+                    <div id="map-picker" style="height: 300px; border-radius: 10px; margin-bottom: 1rem; border: 2px solid #dee2e6;"></div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            {{ form_label(form.latitude) }}
+                            {{ form_widget(form.latitude) }}
+                            {{ form_errors(form.latitude) }}
+                            {{ form_help(form.latitude) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_label(form.longitude) }}
+                            {{ form_widget(form.longitude) }}
+                            {{ form_errors(form.longitude) }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 justify-content-end">
+                        <a href="{{ path('app_lieu_index') }}" class="btn btn-outline-secondary">
+                            <i class="fa-solid fa-xmark me-2"></i>Annuler
+                        </a>
+                        <button type="submit" class="btn btn-normand px-5">
+                            <i class="fa-solid fa-paper-plane me-2"></i>Soumettre le lieu
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // Carte interactive pour choisir les coordonnées
+    const map = L.map('map-picker').setView([49.1829, 0.3707], 8); // Centre Normandie
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    let marker = null;
+
+    const latInput = document.getElementById('lieu_latitude');
+    const lngInput = document.getElementById('lieu_longitude');
+
+    // Si des coordonnées existent déjà, placer le marqueur
+    if (latInput.value && lngInput.value) {
+        marker = L.marker([latInput.value, lngInput.value]).addTo(map);
+        map.setView([latInput.value, lngInput.value], 13);
+    }
+
+    // Clic sur la carte → placer le marqueur et remplir les champs
+    map.on('click', function(e) {
+        const lat = e.latlng.lat.toFixed(6);
+        const lng = e.latlng.lng.toFixed(6);
+
+        latInput.value = lat;
+        lngInput.value = lng;
+
+        if (marker) {
+            marker.setLatLng(e.latlng);
+        } else {
+            marker = L.marker(e.latlng).addTo(map);
+        }
+
+        marker.bindPopup('📍 ' + lat + ', ' + lng).openPopup();
+    });
+</script>
+{% endblock %}

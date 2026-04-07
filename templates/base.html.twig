@@ -353,8 +353,8 @@
 
 		{# --- Flash MESSAGES --- #}
 		<div class="flash-message">
-			{% for type, message in app.flashes %}
-				{% for message in messages %}
+			{% for type, msgs in app.flashes %}
+				{% for message in msgs %}
 					<div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show shadow" role="alert">
 						{{ message }}
 						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
