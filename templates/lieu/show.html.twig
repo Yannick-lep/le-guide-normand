@@ -1,0 +1,231 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ lieu.titre }} — Le Guide Normand{% endblock %}
+
+{% block body %}
+
+{# ── EN-TÊTE ── #}
+<div style="background: linear-gradient(135deg, var(--normand-red), #A52A2A); color: white; padding: 2.5rem 0; position: relative; overflow: hidden;">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-2">
+            <ol class="breadcrumb mb-0" style="--bs-breadcrumb-divider-color: rgba(255,255,255,0.5);">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_home') }}" class="text-white-50 text-decoration-none">Accueil</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_lieu_index') }}" class="text-white-50 text-decoration-none">Bons Plans</a>
+                </li>
+                <li class="breadcrumb-item active text-white">{{ lieu.titre }}</li>
+            </ol>
+        </nav>
+        <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
+            <div>
+                {% if lieu.categorie %}
+                <span class="badge mb-2" style="background: var(--normand-gold); color: #000;">
+                    <i class="fa-solid {{ lieu.categorie.icone ?? 'fa-tag' }} me-1"></i>
+                    {{ lieu.categorie.nom }}
+                </span>
+                {% endif %}
+                <h1 style="font-family: 'Playfair Display', serif;" class="mb-1">{{ lieu.titre }}</h1>
+                {% if lieu.adresse %}
+                <p class="opacity-75 mb-0">
+                    <i class="fa-solid fa-map-pin me-1"></i>{{ lieu.adresse }}
+                </p>
+                {% endif %}
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <span class="badge bg-white bg-opacity-20 text-white px-3 py-2">
+                    <i class="fa-solid fa-eye me-1"></i>{{ lieu.nombreVues }} vues
+                </span>
+                <span class="badge bg-white bg-opacity-20 text-white px-3 py-2">
+                    <i class="fa-solid fa-clock me-1"></i>{{ lieu.createdAt|date('d/m/Y') }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row g-4">
+
+        {# ── CONTENU PRINCIPAL ── #}
+        <div class="col-lg-8">
+
+            {# Image placeholder #}
+            <div class="rounded-3 mb-4 d-flex align-items-center justify-content-center"
+                 style="height: 300px; background: linear-gradient(135deg, #8B1A1A, #2D5A27);">
+                <i class="fa-solid fa-image fa-4x text-white opacity-25"></i>
+            </div>
+
+            {# Description #}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h4 class="section-title mb-2">Description</h4>
+                    <div class="section-divider"></div>
+                    <p class="lead" style="line-height: 1.8;">{{ lieu.description }}</p>
+                </div>
+            </div>
+
+            {# Carte Leaflet #}
+            {% if lieu.latitude and lieu.longitude %}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h4 class="section-title mb-2">
+                        <i class="fa-solid fa-map me-2"></i>Localisation
+                    </h4>
+                    <div class="section-divider"></div>
+                    <div id="map"></div>
+                </div>
+            </div>
+            {% endif %}
+
+            {# Avis #}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h4 class="section-title mb-2">
+                        <i class="fa-solid fa-star me-2"></i>Avis de la communauté
+                    </h4>
+                    <div class="section-divider"></div>
+
+                    {% if lieu.avis is defined and lieu.avis|length > 0 %}
+                        {% for avis in lieu.avis %}
+                        <div class="border-bottom pb-3 mb-3">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{ avis.user.email }}</strong>
+                                <div class="stars">
+                                    {% for i in 1..5 %}
+                                        <i class="fa-{{ i <= avis.note ? 'solid' : 'regular' }} fa-star"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <p class="text-muted small mb-0 mt-1">{{ avis.commentaire }}</p>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">
+                            <i class="fa-regular fa-comment me-2"></i>
+                            Aucun avis pour le moment. Soyez le premier à donner votre avis !
+                        </p>
+                    {% endif %}
+
+                    {% if app.user %}
+                    <div class="mt-3 p-3 rounded-3" style="background: var(--normand-cream);">
+                        <h6 class="fw-bold mb-3">Laisser un avis</h6>
+                        <form method="post" action="#">
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Note</label>
+                                <div class="d-flex gap-2">
+                                    {% for i in 1..5 %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="note" value="{{ i }}" id="note{{ i }}">
+                                        <label class="form-check-label stars" for="note{{ i }}">
+                                            {% for j in 1..i %}<i class="fa-solid fa-star"></i>{% endfor %}
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <textarea name="commentaire" class="form-control" rows="3"
+                                          placeholder="Partagez votre expérience..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-normand">
+                                <i class="fa-solid fa-paper-plane me-2"></i>Publier mon avis
+                            </button>
+                        </form>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-light mt-3">
+                        <a href="{{ path('app_login') }}" style="color: var(--normand-red);">Connectez-vous</a>
+                        pour laisser un avis.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+        {# ── SIDEBAR ── #}
+        <div class="col-lg-4">
+
+            {# Infos rapides #}
+            <div class="card border-0 shadow-sm mb-3 sticky-top" style="top: 80px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Informations</h5>
+
+                    {% if lieu.adresse %}
+                    <div class="d-flex gap-3 mb-3">
+                        <div style="color: var(--normand-red); width: 20px;">
+                            <i class="fa-solid fa-map-pin"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Adresse</div>
+                            <div class="fw-500">{{ lieu.adresse }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if lieu.categorie %}
+                    <div class="d-flex gap-3 mb-3">
+                        <div style="color: var(--normand-red); width: 20px;">
+                            <i class="fa-solid {{ lieu.categorie.icone ?? 'fa-tag' }}"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Catégorie</div>
+                            <div class="fw-500">{{ lieu.categorie.nom }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="d-flex gap-3 mb-3">
+                        <div style="color: var(--normand-red); width: 20px;">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Partagé par</div>
+                            <div class="fw-500">{{ lieu.user.email }}</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 mb-4">
+                        <div style="color: var(--normand-red); width: 20px;">
+                            <i class="fa-solid fa-calendar"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Publié le</div>
+                            <div class="fw-500">{{ lieu.createdAt|date('d/m/Y') }}</div>
+                        </div>
+                    </div>
+
+                    {# Partager #}
+                    <div class="border-top pt-3">
+                        <div class="small text-muted mb-2">Partager</div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-secondary flex-grow-1" onclick="navigator.clipboard.writeText(window.location.href); alert('Lien copié !')">
+                                <i class="fa-solid fa-link me-1"></i>Copier le lien
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{% if lieu.latitude and lieu.longitude %}
+<script>
+    const map = L.map('map').setView([{{ lieu.latitude }}, {{ lieu.longitude }}], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    L.marker([{{ lieu.latitude }}, {{ lieu.longitude }}])
+        .addTo(map)
+        .bindPopup('<strong>{{ lieu.titre }}</strong><br>{{ lieu.adresse }}')
+        .openPopup();
+</script>
+{% endif %}
+{% endblock %}

@@ -115,7 +115,7 @@
                                     <i class="fa-solid fa-map-pin me-1"></i>
                                     {{ lieu.adresse ?? 'Normandie' }}
                                 </small>
-                                <a href="#" class="btn btn-normand btn-sm">
+                                <a href="{{ path('app_lieu_show', {slug: lieu.slug}) }}" class="btn btn-normand btn-sm">
                                     Voir <i class="fa-solid fa-arrow-right ms-1"></i>
                                 </a>
                             </div>

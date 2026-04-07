@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Lieu;
 use App\Repository\CategorieRepository;
 use App\Repository\LieuRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +32,18 @@ class LieuController extends AbstractController
             'categories'     => $categories,
             'categorieSlug'  => $categorieSlug,
             'recherche'      => $recherche,
+        ]);
+    }
+
+    #[Route('/{slug}', name: 'show')]
+    public function show(Lieu $lieu, EntityManagerInterface $em): Response
+    {
+        // Incrémenter le nombre de vues
+        $lieu->setNombreVues($lieu->getNombreVues() + 1);
+        $em->flush();
+
+        return $this->render('lieu/show.html.twig', [
+            'lieu' => $lieu,
         ]);
     }
 }
