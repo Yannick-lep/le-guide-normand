@@ -1,0 +1,188 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Carte interactive — Le Guide Normand{% endblock %}
+
+{% block body %}
+
+<div style="background: linear-gradient(135deg, var(--normand-red), #A52A2A); color: white; padding: 2rem 0; position: relative; overflow: hidden;">
+    <div class="container">
+        <h1 style="font-family: 'Playfair Display', serif;" class="mb-1">
+            <i class="fa-solid fa-map me-2"></i>Carte interactive
+        </h1>
+        <p class="opacity-75 mb-0">Tous les bons plans, terrains et événements de Normandie</p>
+    </div>
+</div>
+
+<div class="container-fluid py-3">
+
+    {# Légende + filtres #}
+    <div class="d-flex gap-3 flex-wrap align-items-center mb-3 px-3">
+        <div class="d-flex align-items-center gap-2">
+            <span style="width:14px;height:14px;border-radius:50%;background:#8B1A1A;display:inline-block;"></span>
+            <span class="small fw-bold">Bons plans ({{ lieux|length }})</span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span style="width:14px;height:14px;border-radius:50%;background:#2D5A27;display:inline-block;"></span>
+            <span class="small fw-bold">Terrains ({{ terrains|length }})</span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span style="width:14px;height:14px;border-radius:50%;background:#1a237e;display:inline-block;"></span>
+            <span class="small fw-bold">Événements ({{ evenements|length }})</span>
+        </div>
+
+        <div class="ms-auto d-flex gap-2">
+            <button class="btn btn-sm btn-outline-secondary" id="btn-lieux">
+                <i class="fa-solid fa-map-location-dot me-1"></i>Bons plans
+            </button>
+            <button class="btn btn-sm btn-outline-secondary" id="btn-terrains">
+                <i class="fa-solid fa-tent me-1"></i>Terrains
+            </button>
+            <button class="btn btn-sm btn-outline-secondary" id="btn-evenements">
+                <i class="fa-solid fa-calendar-days me-1"></i>Événements
+            </button>
+        </div>
+    </div>
+
+    {# Carte plein écran #}
+    <div id="map-global" style="height: calc(100vh - 220px); border-radius: 12px; margin: 0 1rem;"></div>
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // Initialisation de la carte centrée sur la Normandie
+    const map = L.map('map-global').setView([49.1829, 0.3707], 8);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Icônes personnalisées
+    const iconLieu = L.divIcon({
+        html: '<div style="background:#8B1A1A;color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);font-size:14px;">📍</div>',
+        className: '',
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        popupAnchor: [0, -16],
+    });
+
+    const iconTerrain = L.divIcon({
+        html: '<div style="background:#2D5A27;color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);font-size:14px;">⛺</div>',
+        className: '',
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        popupAnchor: [0, -16],
+    });
+
+    const iconEvenement = L.divIcon({
+        html: '<div style="background:#1a237e;color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);font-size:14px;">📅</div>',
+        className: '',
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        popupAnchor: [0, -16],
+    });
+
+    // Groupes de marqueurs
+    const groupeLieux     = L.layerGroup().addTo(map);
+    const groupeTerrains  = L.layerGroup().addTo(map);
+    const groupeEvenements = L.layerGroup().addTo(map);
+
+    // ── Bons plans ──
+    const lieux = {{ lieux|map(l => {
+        'lat': l.latitude,
+        'lng': l.longitude,
+        'titre': l.titre,
+        'adresse': l.adresse,
+        'slug': l.slug,
+        'categorie': l.categorie ? l.categorie.nom : ''
+    })|json_encode|raw }};
+
+    lieux.forEach(l => {
+        if (!l.lat || !l.lng) return;
+        L.marker([l.lat, l.lng], {icon: iconLieu})
+            .addTo(groupeLieux)
+            .bindPopup(`
+                <div style="min-width:180px;">
+                    <span style="background:#8B1A1A;color:white;padding:2px 8px;border-radius:10px;font-size:11px;">${l.categorie}</span>
+                    <h6 style="margin:8px 0 4px;font-weight:bold;">${l.titre}</h6>
+                    <p style="margin:0 0 8px;font-size:12px;color:#666;">${l.adresse || ''}</p>
+                    <a href="/lieux/${l.slug}" style="background:#8B1A1A;color:white;padding:4px 12px;border-radius:6px;text-decoration:none;font-size:12px;">Voir →</a>
+                </div>
+            `);
+    });
+
+    // ── Terrains ──
+    const terrains = {{ terrains|map(t => {
+        'lat': t.latitude,
+        'lng': t.longitude,
+        'titre': t.titre,
+        'adresse': t.adresse,
+        'id': t.id,
+        'prix': t.prixNuit
+    })|json_encode|raw }};
+
+    terrains.forEach(t => {
+        if (!t.lat || !t.lng) return;
+        L.marker([t.lat, t.lng], {icon: iconTerrain})
+            .addTo(groupeTerrains)
+            .bindPopup(`
+                <div style="min-width:180px;">
+                    <span style="background:#2D5A27;color:white;padding:2px 8px;border-radius:10px;font-size:11px;">⛺ Terrain</span>
+                    <h6 style="margin:8px 0 4px;font-weight:bold;">${t.titre}</h6>
+                    <p style="margin:0 0 4px;font-size:12px;color:#666;">${t.adresse || ''}</p>
+                    <p style="margin:0 0 8px;font-size:13px;font-weight:bold;color:#2D5A27;">${t.prix ? t.prix + ' €/nuit' : 'Gratuit'}</p>
+                    <a href="/terrains/${t.id}" style="background:#2D5A27;color:white;padding:4px 12px;border-radius:6px;text-decoration:none;font-size:12px;">Voir →</a>
+                </div>
+            `);
+    });
+
+    // ── Événements ──
+    const evenements = {{ evenements|map(e => {
+        'lat': e.latitude,
+        'lng': e.longitude,
+        'titre': e.titre,
+        'adresse': e.adresse,
+        'id': e.id,
+        'date': e.dateDebut|date('d/m/Y'),
+        'gratuit': e.estGratuit
+    })|json_encode|raw }};
+
+    evenements.forEach(e => {
+        if (!e.lat || !e.lng) return;
+        L.marker([e.lat, e.lng], {icon: iconEvenement})
+            .addTo(groupeEvenements)
+            .bindPopup(`
+                <div style="min-width:180px;">
+                    <span style="background:#1a237e;color:white;padding:2px 8px;border-radius:10px;font-size:11px;">📅 ${e.date}</span>
+                    <h6 style="margin:8px 0 4px;font-weight:bold;">${e.titre}</h6>
+                    <p style="margin:0 0 4px;font-size:12px;color:#666;">${e.adresse || ''}</p>
+                    <p style="margin:0 0 8px;font-size:12px;">${e.gratuit ? '✅ Gratuit' : '💶 Payant'}</p>
+                    <a href="/evenements/${e.id}" style="background:#1a237e;color:white;padding:4px 12px;border-radius:6px;text-decoration:none;font-size:12px;">Voir →</a>
+                </div>
+            `);
+    });
+
+    // Boutons de filtrage
+    function toggleGroupe(btn, groupe) {
+        if (map.hasLayer(groupe)) {
+            map.removeLayer(groupe);
+            btn.classList.remove('active');
+        } else {
+            map.addLayer(groupe);
+            btn.classList.add('active');
+        }
+    }
+
+    document.getElementById('btn-lieux').addEventListener('click', function() {
+        toggleGroupe(this, groupeLieux);
+    });
+    document.getElementById('btn-terrains').addEventListener('click', function() {
+        toggleGroupe(this, groupeTerrains);
+    });
+    document.getElementById('btn-evenements').addEventListener('click', function() {
+        toggleGroupe(this, groupeEvenements);
+    });
+</script>
+{% endblock %}
