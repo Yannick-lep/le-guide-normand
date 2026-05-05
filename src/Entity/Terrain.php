@@ -46,7 +46,7 @@ class Terrain
     #[ORM\Column]
     private ?bool $aWifi = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2, nullable: true)]
     private ?string $prixNuit = null;
 
     #[ORM\Column]
@@ -200,7 +200,7 @@ class Terrain
         return $this->prixNuit;
     }
 
-    public function setPrixNuit(string $prixNuit): static
+    public function setPrixNuit(?string $prixNuit): static
     {
         $this->prixNuit = $prixNuit;
 

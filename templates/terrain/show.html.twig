@@ -1,0 +1,183 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ terrain.titre }} — Le Guide Normand{% endblock %}
+
+{% block body %}
+
+<div style="background: linear-gradient(135deg, var(--normand-green), #1a3a16); color: white; padding: 2.5rem 0; position: relative; overflow: hidden;">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-2">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_home') }}" class="text-white-50 text-decoration-none">Accueil</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_terrain_index') }}" class="text-white-50 text-decoration-none">Terrains</a>
+                </li>
+                <li class="breadcrumb-item active text-white">{{ terrain.titre }}</li>
+            </ol>
+        </nav>
+        <h1 style="font-family: 'Playfair Display', serif;" class="mb-1">{{ terrain.titre }}</h1>
+        <p class="opacity-75 mb-0">
+            <i class="fa-solid fa-map-pin me-1"></i>{{ terrain.adresse }}
+        </p>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row g-4">
+
+        {# ── CONTENU PRINCIPAL ── #}
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h4 class="section-title mb-2">Description</h4>
+                    <div class="section-divider"></div>
+                    <p style="line-height: 1.8;">{{ terrain.description }}</p>
+                </div>
+            </div>
+
+            {# Équipements #}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h4 class="section-title mb-2">
+                        <i class="fa-solid fa-list-check me-2"></i>Équipements disponibles
+                    </h4>
+                    <div class="section-divider"></div>
+                    <div class="row g-3 mt-1">
+                        <div class="col-6 col-md-3 text-center">
+                            <div class="p-3 rounded-3 {{ terrain.aDouche ? 'bg-success bg-opacity-10' : 'bg-light' }}">
+                                <i class="fa-solid fa-shower fa-2x mb-2 {{ terrain.aDouche ? 'text-success' : 'text-muted opacity-25' }}"></i>
+                                <div class="small fw-bold {{ terrain.aDouche ? 'text-success' : 'text-muted' }}">Douche</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 text-center">
+                            <div class="p-3 rounded-3 {{ terrain.aElectricite ? 'bg-warning bg-opacity-10' : 'bg-light' }}">
+                                <i class="fa-solid fa-bolt fa-2x mb-2 {{ terrain.aElectricite ? 'text-warning' : 'text-muted opacity-25' }}"></i>
+                                <div class="small fw-bold {{ terrain.aElectricite ? 'text-warning' : 'text-muted' }}">Électricité</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 text-center">
+                            <div class="p-3 rounded-3 {{ terrain.aToilettes ? 'bg-info bg-opacity-10' : 'bg-light' }}">
+                                <i class="fa-solid fa-restroom fa-2x mb-2 {{ terrain.aToilettes ? 'text-info' : 'text-muted opacity-25' }}"></i>
+                                <div class="small fw-bold {{ terrain.aToilettes ? 'text-info' : 'text-muted' }}">Toilettes</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 text-center">
+                            <div class="p-3 rounded-3 {{ terrain.aWifi ? 'bg-primary bg-opacity-10' : 'bg-light' }}">
+                                <i class="fa-solid fa-wifi fa-2x mb-2 {{ terrain.aWifi ? 'text-primary' : 'text-muted opacity-25' }}"></i>
+                                <div class="small fw-bold {{ terrain.aWifi ? 'text-primary' : 'text-muted' }}">Wifi</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Carte #}
+            {% if terrain.latitude and terrain.longitude %}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h4 class="section-title mb-2">
+                        <i class="fa-solid fa-map me-2"></i>Localisation approximative
+                    </h4>
+                    <div class="section-divider"></div>
+                    <p class="text-muted small">La localisation exacte vous sera communiquée après contact avec le propriétaire.</p>
+                    <div id="map"></div>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+
+        {# ── SIDEBAR ── #}
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 80px;">
+                <div class="card-body p-4">
+
+                    {# Prix #}
+                    <div class="text-center mb-4 pb-3 border-bottom">
+                        {% if terrain.prixNuit %}
+                        <div class="fs-2 fw-bold" style="color: var(--normand-green);">
+                            {{ terrain.prixNuit }} €
+                        </div>
+                        <div class="text-muted small">par nuit et par personne</div>
+                        {% else %}
+                        <div class="fs-2 fw-bold text-success">Gratuit</div>
+                        <div class="text-muted small">accès libre</div>
+                        {% endif %}
+                    </div>
+
+                    {# Infos #}
+                    <div class="d-flex gap-3 mb-3">
+                        <div style="color: var(--normand-green); width: 20px;">
+                            <i class="fa-solid fa-person"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Capacité</div>
+                            <div class="fw-bold">{{ terrain.capacitePersonnes }} personnes maximum</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 mb-3">
+                        <div style="color: var(--normand-green); width: 20px;">
+                            <i class="fa-solid fa-map-pin"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Localité</div>
+                            <div class="fw-bold">{{ terrain.adresse }}</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 mb-4">
+                        <div style="color: var(--normand-green); width: 20px;">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Proposé par</div>
+                            <div class="fw-bold">{{ terrain.user.email }}</div>
+                        </div>
+                    </div>
+
+                    {# Bouton contact #}
+                    {% if app.user %}
+                    <button class="btn btn-normand w-100 btn-lg mb-2">
+                        <i class="fa-solid fa-envelope me-2"></i>Contacter le propriétaire
+                    </button>
+                    {% else %}
+                    <a href="{{ path('app_login') }}" class="btn btn-normand w-100 btn-lg mb-2">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i>Se connecter pour contacter
+                    </a>
+                    {% endif %}
+
+                    <a href="{{ path('app_terrain_index') }}" class="btn btn-outline-secondary w-100 btn-sm">
+                        <i class="fa-solid fa-arrow-left me-1"></i>Retour à la liste
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{% if terrain.latitude and terrain.longitude %}
+<script>
+    const map = L.map('map').setView([{{ terrain.latitude }}, {{ terrain.longitude }}], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Cercle approximatif plutôt qu'un marqueur précis
+    L.circle([{{ terrain.latitude }}, {{ terrain.longitude }}], {
+        color: '#2D5A27',
+        fillColor: '#2D5A27',
+        fillOpacity: 0.2,
+        radius: 500
+    }).addTo(map).bindPopup('<strong>{{ terrain.titre }}</strong><br><small>Localisation approximative</small>').openPopup();
+</script>
+{% endif %}
+{% endblock %}

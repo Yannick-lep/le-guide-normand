@@ -53,6 +53,50 @@ class AppFixtures extends Fixture
             ['titre' => 'Côte d\'Albâtre - Fécamp', 'desc' => 'Point de vue exceptionnel sur les falaises blanches de la Côte d\'Albâtre. Coucher de soleil magnifique depuis les hauteurs.', 'adresse' => 'Fécamp, Seine-Maritime', 'lat' => 49.7573, 'lng' => 0.3742, 'cat' => 4],
         ];
 
+       // Terrains
+$terrains = [
+    [
+        'titre' => 'Jardin de la ferme du Val',
+        'desc'  => 'Grand jardin arboré au cœur du Pays de Caux. Accès à une douche chaude et toilettes. Idéal pour les randonneurs du GR21. Terrain plat, parfait pour 2 tentes.',
+        'adresse' => 'Saint-Valery-en-Caux, Seine-Maritime',
+        'lat'   => 49.8674, 'lng' => 0.7147,
+        'cap'   => 4, 'douche' => true, 'elec' => false, 'wc' => true, 'wifi' => false, 'prix' => 5.00,
+    ],
+    [
+        'titre' => 'Prairie en bordure de forêt',
+        'desc'  => 'Belle prairie calme en lisière de la forêt de Lyons. Eau courante disponible. Parfait pour les cyclotouristes et randonneurs. Vue magnifique sur la vallée.',
+        'adresse' => 'Lyons-la-Forêt, Eure',
+        'lat'   => 49.4003, 'lng' => 1.4772,
+        'cap'   => 6, 'douche' => false, 'elec' => false, 'wc' => false, 'wifi' => false, 'prix' => null,
+    ],
+    [
+        'titre' => 'Verger normand avec équipements',
+        'desc'  => 'Magnifique verger de pommiers normands. Douche chaude, électricité et wifi disponibles. Accueil chaleureux, possibilité d\'acheter des produits locaux (cidre, calvados).',
+        'adresse' => 'Cambremer, Calvados',
+        'lat'   => 49.1503, 'lng' => 0.0647,
+        'cap'   => 8, 'douche' => true, 'elec' => true, 'wc' => true, 'wifi' => true, 'prix' => 8.00,
+    ],
+];
+
+foreach ($terrains as $data) {
+    $terrain = new \App\Entity\Terrain();
+    $terrain->setTitre($data['titre']);
+    $terrain->setDescription($data['desc']);
+    $terrain->setAdresse($data['adresse']);
+    $terrain->setLatitude($data['lat']);
+    $terrain->setLongitude($data['lng']);
+    $terrain->setCapacitePersonnes($data['cap']);
+    $terrain->setADouche($data['douche']);
+    $terrain->setAElectricite($data['elec']);
+    $terrain->setAToilettes($data['wc']);
+    $terrain->setAWifi($data['wifi']);
+    $terrain->setPrixNuit($data['prix']);
+    $terrain->setEstDisponible(true);
+    $terrain->setCreatedAt(new \DateTimeImmutable());
+    $terrain->setUser($user);
+    $manager->persist($terrain);
+}
+
         foreach ($lieux as $data) {
             $lieu = new Lieu();
             $lieu->setTitre($data['titre']);

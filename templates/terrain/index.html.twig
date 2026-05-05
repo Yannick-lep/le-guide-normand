@@ -1,3 +1,157 @@
 {% extends 'base.html.twig' %}
-{% block title %}Terrains{% endblock %}
-{% block body %}<div class="container py-5"><h1>Terrains</h1></div>{% endblock %}
+
+{% block title %}Terrains pour bivouaquer — Le Guide Normand{% endblock %}
+
+{% block body %}
+
+<div style="background: linear-gradient(135deg, var(--normand-green), #1a3a16); color: white; padding: 3rem 0; position: relative; overflow: hidden;">
+    <div class="container">
+        <h1 style="font-family: 'Playfair Display', serif;" class="mb-2">
+            <i class="fa-solid fa-tent me-2"></i>Terrains pour bivouaquer
+        </h1>
+        <p class="opacity-75 mb-0">Des particuliers ouvrent leur jardin aux randonneurs et cyclotouristes</p>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row g-4">
+
+        {# ── SIDEBAR FILTRES ── #}
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3"><i class="fa-solid fa-filter me-2"></i>Filtres</h6>
+
+                    <form method="get">
+                        <div class="mb-3">
+                            <input type="text" name="q" class="form-control form-control-sm"
+                                   placeholder="Rechercher..." value="{{ recherche ?? '' }}">
+                        </div>
+
+                        <h6 class="small fw-bold text-muted mb-2">Équipements</h6>
+                        <div class="d-flex flex-column gap-2 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="douche" id="douche"
+                                       value="1" {{ filtreDouche ? 'checked' : '' }}>
+                                <label class="form-check-label small" for="douche">
+                                    <i class="fa-solid fa-shower me-1 text-success"></i>Douche
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="electricite" id="electricite"
+                                       value="1" {{ filtreElec ? 'checked' : '' }}>
+                                <label class="form-check-label small" for="electricite">
+                                    <i class="fa-solid fa-bolt me-1 text-warning"></i>Électricité
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="wifi" id="wifi"
+                                       value="1" {{ filtreWifi ? 'checked' : '' }}>
+                                <label class="form-check-label small" for="wifi">
+                                    <i class="fa-solid fa-wifi me-1 text-primary"></i>Wifi
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="gratuit" id="gratuit"
+                                       value="1" {{ filtreGratuit ? 'checked' : '' }}>
+                                <label class="form-check-label small" for="gratuit">
+                                    <i class="fa-solid fa-euro-sign me-1 text-success"></i>Gratuit
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-normand btn-sm w-100 mb-2">
+                            <i class="fa-solid fa-filter me-1"></i>Filtrer
+                        </button>
+                        <a href="{{ path('app_terrain_index') }}" class="btn btn-outline-secondary btn-sm w-100">
+                            Réinitialiser
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {# ── LISTE DES TERRAINS ── #}
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted">
+                    <strong>{{ terrains|length }}</strong> terrain{{ terrains|length > 1 ? 's' : '' }} disponible{{ terrains|length > 1 ? 's' : '' }}
+                </span>
+                {% if app.user %}
+                <a href="#" class="btn btn-normand btn-sm">
+                    <i class="fa-solid fa-plus me-1"></i>Proposer mon terrain
+                </a>
+                {% endif %}
+            </div>
+
+            {% if terrains is empty %}
+            <div class="text-center py-5 text-muted">
+                <i class="fa-solid fa-tent fa-4x mb-3 opacity-25"></i>
+                <h5>Aucun terrain trouvé</h5>
+                <p>Essayez avec d'autres filtres.</p>
+            </div>
+            {% else %}
+            <div class="row g-3">
+                {% for terrain in terrains %}
+                <div class="col-md-6">
+                    <div class="card card-normand h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="fw-bold mb-0">{{ terrain.titre }}</h5>
+                                <span class="fw-bold ms-2 text-nowrap" style="color: var(--normand-green);">
+                                    {% if terrain.prixNuit %}
+                                        {{ terrain.prixNuit }} €<small class="fw-normal text-muted">/nuit</small>
+                                    {% else %}
+                                        <span class="badge bg-success">Gratuit</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+
+                            <p class="text-muted small mb-2">
+                                <i class="fa-solid fa-map-pin me-1"></i>{{ terrain.adresse }}
+                            </p>
+
+                            <p class="small mb-3">{{ terrain.description|slice(0, 100) }}...</p>
+
+                            <div class="d-flex flex-wrap gap-1 mb-3">
+                                <span class="badge bg-light text-dark border">
+                                    <i class="fa-solid fa-person me-1"></i>{{ terrain.capacitePersonnes }} pers. max
+                                </span>
+                                {% if terrain.aDouche %}
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success">
+                                        <i class="fa-solid fa-shower me-1"></i>Douche
+                                    </span>
+                                {% endif %}
+                                {% if terrain.aElectricite %}
+                                    <span class="badge bg-warning bg-opacity-10 text-warning border border-warning">
+                                        <i class="fa-solid fa-bolt me-1"></i>Électricité
+                                    </span>
+                                {% endif %}
+                                {% if terrain.aToilettes %}
+                                    <span class="badge bg-info bg-opacity-10 text-info border border-info">
+                                        <i class="fa-solid fa-restroom me-1"></i>Toilettes
+                                    </span>
+                                {% endif %}
+                                {% if terrain.aWifi %}
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary">
+                                        <i class="fa-solid fa-wifi me-1"></i>Wifi
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <a href="{{ path('app_terrain_show', {id: terrain.id}) }}"
+                               class="btn btn-normand btn-sm w-100">
+                                Voir le terrain <i class="fa-solid fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
