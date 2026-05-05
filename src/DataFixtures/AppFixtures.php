@@ -53,49 +53,67 @@ class AppFixtures extends Fixture
             ['titre' => 'Côte d\'Albâtre - Fécamp', 'desc' => 'Point de vue exceptionnel sur les falaises blanches de la Côte d\'Albâtre. Coucher de soleil magnifique depuis les hauteurs.', 'adresse' => 'Fécamp, Seine-Maritime', 'lat' => 49.7573, 'lng' => 0.3742, 'cat' => 4],
         ];
 
-       // Terrains
-$terrains = [
-    [
-        'titre' => 'Jardin de la ferme du Val',
-        'desc'  => 'Grand jardin arboré au cœur du Pays de Caux. Accès à une douche chaude et toilettes. Idéal pour les randonneurs du GR21. Terrain plat, parfait pour 2 tentes.',
-        'adresse' => 'Saint-Valery-en-Caux, Seine-Maritime',
-        'lat'   => 49.8674, 'lng' => 0.7147,
-        'cap'   => 4, 'douche' => true, 'elec' => false, 'wc' => true, 'wifi' => false, 'prix' => 5.00,
-    ],
-    [
-        'titre' => 'Prairie en bordure de forêt',
-        'desc'  => 'Belle prairie calme en lisière de la forêt de Lyons. Eau courante disponible. Parfait pour les cyclotouristes et randonneurs. Vue magnifique sur la vallée.',
-        'adresse' => 'Lyons-la-Forêt, Eure',
-        'lat'   => 49.4003, 'lng' => 1.4772,
-        'cap'   => 6, 'douche' => false, 'elec' => false, 'wc' => false, 'wifi' => false, 'prix' => null,
-    ],
-    [
-        'titre' => 'Verger normand avec équipements',
-        'desc'  => 'Magnifique verger de pommiers normands. Douche chaude, électricité et wifi disponibles. Accueil chaleureux, possibilité d\'acheter des produits locaux (cidre, calvados).',
-        'adresse' => 'Cambremer, Calvados',
-        'lat'   => 49.1503, 'lng' => 0.0647,
-        'cap'   => 8, 'douche' => true, 'elec' => true, 'wc' => true, 'wifi' => true, 'prix' => 8.00,
-    ],
-];
+        // Terrains
+        $terrains = [
+            [
+                'titre' => 'Jardin de la ferme du Val',
+                'desc'  => 'Grand jardin arboré au cœur du Pays de Caux. Accès à une douche chaude et toilettes. Idéal pour les randonneurs du GR21. Terrain plat, parfait pour 2 tentes.',
+                'adresse' => 'Saint-Valery-en-Caux, Seine-Maritime',
+                'lat'   => 49.8674,
+                'lng' => 0.7147,
+                'cap'   => 4,
+                'douche' => true,
+                'elec' => false,
+                'wc' => true,
+                'wifi' => false,
+                'prix' => 5.00,
+            ],
+            [
+                'titre' => 'Prairie en bordure de forêt',
+                'desc'  => 'Belle prairie calme en lisière de la forêt de Lyons. Eau courante disponible. Parfait pour les cyclotouristes et randonneurs. Vue magnifique sur la vallée.',
+                'adresse' => 'Lyons-la-Forêt, Eure',
+                'lat'   => 49.4003,
+                'lng' => 1.4772,
+                'cap'   => 6,
+                'douche' => false,
+                'elec' => false,
+                'wc' => false,
+                'wifi' => false,
+                'prix' => null,
+            ],
+            [
+                'titre' => 'Verger normand avec équipements',
+                'desc'  => 'Magnifique verger de pommiers normands. Douche chaude, électricité et wifi disponibles. Accueil chaleureux, possibilité d\'acheter des produits locaux (cidre, calvados).',
+                'adresse' => 'Cambremer, Calvados',
+                'lat'   => 49.1503,
+                'lng' => 0.0647,
+                'cap'   => 8,
+                'douche' => true,
+                'elec' => true,
+                'wc' => true,
+                'wifi' => true,
+                'prix' => 8.00,
+            ],
+        ];
 
-foreach ($terrains as $data) {
-    $terrain = new \App\Entity\Terrain();
-    $terrain->setTitre($data['titre']);
-    $terrain->setDescription($data['desc']);
-    $terrain->setAdresse($data['adresse']);
-    $terrain->setLatitude($data['lat']);
-    $terrain->setLongitude($data['lng']);
-    $terrain->setCapacitePersonnes($data['cap']);
-    $terrain->setADouche($data['douche']);
-    $terrain->setAElectricite($data['elec']);
-    $terrain->setAToilettes($data['wc']);
-    $terrain->setAWifi($data['wifi']);
-    $terrain->setPrixNuit($data['prix']);
-    $terrain->setEstDisponible(true);
-    $terrain->setCreatedAt(new \DateTimeImmutable());
-    $terrain->setUser($user);
-    $manager->persist($terrain);
-}
+        foreach ($terrains as $data) {
+            $terrain = new \App\Entity\Terrain();
+            $terrain->setTitre($data['titre']);
+            $terrain->setDescription($data['desc']);
+            $terrain->setAdresse($data['adresse']);
+            $terrain->setLatitude($data['lat']);
+            $terrain->setLongitude($data['lng']);
+            $terrain->setCapacitePersonnes($data['cap']);
+            $terrain->setADouche($data['douche']);
+            $terrain->setAElectricite($data['elec']);
+            $terrain->setAToilettes($data['wc']);
+            $terrain->setAWifi($data['wifi']);
+            $terrain->setPrixNuit($data['prix']);
+            $terrain->setEstDisponible(true);
+            $terrain->setCreatedAt(new \DateTimeImmutable());
+            $terrain->setUser($user);
+            $manager->persist($terrain);
+        }
 
         foreach ($lieux as $data) {
             $lieu = new Lieu();
@@ -112,7 +130,74 @@ foreach ($terrains as $data) {
             $lieu->setUser($user);
             $manager->persist($lieu);
         }
+        // Evénements
+        $evenements = [
+            [
+                'titre' => 'Randonnée des Falaises - Étretat',
+                'desc'  => 'Grande randonnée guidée le long des falaises d\'Étretat. Départ depuis le parking de la plage. Prévoir de bonnes chaussures et un pique-nique. Distance : 12 km. Difficulté : modérée.',
+                'adresse' => 'Étretat, Seine-Maritime',
+                'lat'   => 49.7070,
+                'lng' => 0.2049,
+                'debut' => new \DateTimeImmutable('+7 days'),
+                'fin'   => new \DateTimeImmutable('+7 days +4hours'),
+                'places' => 20,
+                'gratuit' => true,
+                'prix' => null,
+            ],
+            [
+                'titre' => 'Visite nocturne du Château Gaillard',
+                'desc'  => 'Découvrez le Château Gaillard à la tombée de la nuit. Une visite guidée exceptionnelle avec éclairage spécial. Réservation obligatoire. Durée : 2h.',
+                'adresse' => 'Les Andelys, Eure',
+                'lat'   => 49.2430,
+                'lng' => 1.4118,
+                'debut' => new \DateTimeImmutable('+14 days'),
+                'fin'   => new \DateTimeImmutable('+14 days +2 hours'),
+                'places' => 30,
+                'gratuit' => false,
+                'prix' => 8.50,
+            ],
+            [
+                'titre' => 'Festival du cidre Normand',
+                'desc'  => 'Venez découvrir les meilleurs producteurs de cidre et calvados de de Normandie. Dégustations, animations et marché de producteurs locaux. Entrée libre.',
+                'adresse' => 'Cambremer, Calvados',
+                'lat'   => 49.1503,
+                'lng' => 0.0647,
+                'debut' => new \DateTimeImmutable('+21 days'),
+                'fin'   => new \DateTimeImmutable('+21 days +8 hours'),
+                'places' => null,
+                'gratuit' => true,
+                'prix' => null,
+            ],
+            [
+                'titre' => 'Sortie Birdwatching - Baie de Seine',
+                'desc'  => 'Observation des oiseaux migrateurs dans la Baie de Seine avec un ornithologue professionnel. Jumelles recommandées. Groupe limité à 12 personnes.',
+                'adresse' => 'Honfleur, Calvados',
+                'lat'   => 49.4183,
+                'lng' => 0.2333,
+                'debut' => new \DateTimeImmutable('+5 days'),
+                'fin'   => new \DateTimeImmutable('+5 days +3hours'),
+                'places' => 12,
+                'gratuit' => false,
+                'prix' => 15.00,
+            ],
+        ];
 
+        foreach ($evenements as $data) {
+            $evenement = new \App\Entity\Evenement();
+            $evenement->setTitre($data['titre']);
+            $evenement->setDescription($data['desc']);
+            $evenement->setAdresse($data['adresse']);
+            $evenement->setLatitude($data['lat']);
+            $evenement->setLongitude($data['lng']);
+            $evenement->setDateDebut($data['debut']);
+            $evenement->setDateFin($data['fin']);
+            $evenement->setPlacesMax($data['places']);
+            $evenement->setEstGratuit($data['gratuit']);
+            $evenement->setPrix($data['prix']);
+            $evenement->setCreatedAt(new \DateTimeImmutable());
+            $evenement->setUser($user);
+            $manager->persist($evenement);
+        }
         $manager->flush();
     }
 }

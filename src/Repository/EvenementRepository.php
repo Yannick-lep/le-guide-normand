@@ -16,6 +16,27 @@ class EvenementRepository extends ServiceEntityRepository
         parent::__construct($registry, Evenement::class);
     }
 
+    public function findByFiltres(
+        ?string $recherche = null,
+        ?string $gratuit = null
+    ): array {
+        $qb = $this->createQueryBuilder('e')
+            ->where('e.dateDebut >= :now')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->orderBy('e.dateDebut', 'ASC');
+
+        if ($recherche) {
+            $qb->andWhere('e.titre LIKE :q OR e.description LIKE :q OR e.adresse LIKE :q')
+                ->setParameter('q', '%' . $recherche . '%');
+        }
+
+        if ($gratuit) {
+            $qb->andWhere('e.estGratuit = true');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     //    /**
     //     * @return Evenement[] Returns an array of Evenement objects
     //     */

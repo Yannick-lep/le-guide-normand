@@ -1,0 +1,160 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ evenement.titre }} — Le Guide Normand{% endblock %}
+
+{% block body %}
+
+<div style="background: linear-gradient(135deg, #1a237e, #283593); color: white; padding: 2.5rem 0; position: relative; overflow: hidden;">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-2">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_home') }}" class="text-white-50 text-decoration-none">Accueil</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_evenement_index') }}" class="text-white-50 text-decoration-none">Événements</a>
+                </li>
+                <li class="breadcrumb-item active text-white">{{ evenement.titre }}</li>
+            </ol>
+        </nav>
+        <h1 style="font-family: 'Playfair Display', serif;" class="mb-1">{{ evenement.titre }}</h1>
+        {% if evenement.adresse %}
+        <p class="opacity-75 mb-0">
+            <i class="fa-solid fa-map-pin me-1"></i>{{ evenement.adresse }}
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row g-4">
+
+        {# ── CONTENU ── #}
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h4 class="section-title mb-2">Description</h4>
+                    <div class="section-divider"></div>
+                    <p style="line-height: 1.8;">{{ evenement.description }}</p>
+                </div>
+            </div>
+
+            {% if evenement.latitude and evenement.longitude %}
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="section-title mb-2">
+                        <i class="fa-solid fa-map me-2"></i>Lieu de l'événement
+                    </h4>
+                    <div class="section-divider"></div>
+                    <div id="map"></div>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+
+        {# ── SIDEBAR ── #}
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 80px;">
+                <div class="card-body p-4">
+
+                    {# Date #}
+                    <div class="text-center p-3 rounded-3 mb-4"
+                         style="background: #1a237e; color: white;">
+                        <div class="fs-1 fw-bold lh-1">{{ evenement.dateDebut|date('d') }}</div>
+                        <div class="text-uppercase opacity-75">{{ evenement.dateDebut|date('F Y') }}</div>
+                    </div>
+
+                    <div class="d-flex gap-3 mb-3">
+                        <div style="color: #1a237e; width: 20px;">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Horaires</div>
+                            <div class="fw-bold">
+                                {{ evenement.dateDebut|date('H:i') }}
+                                {% if evenement.dateFin %} → {{ evenement.dateFin|date('H:i') }}{% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if evenement.adresse %}
+                    <div class="d-flex gap-3 mb-3">
+                        <div style="color: #1a237e; width: 20px;">
+                            <i class="fa-solid fa-map-pin"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Lieu</div>
+                            <div class="fw-bold">{{ evenement.adresse }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="d-flex gap-3 mb-3">
+                        <div style="color: #1a237e; width: 20px;">
+                            <i class="fa-solid fa-euro-sign"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Tarif</div>
+                            <div class="fw-bold">
+                                {% if evenement.estGratuit %}
+                                    <span class="text-success">Gratuit</span>
+                                {% else %}
+                                    {{ evenement.prix }} €
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if evenement.placesMax %}
+                    <div class="d-flex gap-3 mb-4">
+                        <div style="color: #1a237e; width: 20px;">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Places disponibles</div>
+                            <div class="fw-bold">{{ evenement.placesMax }} places maximum</div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if app.user %}
+                    <button class="btn w-100 btn-lg mb-2" style="background: #1a237e; color: white;">
+                        <i class="fa-solid fa-check me-2"></i>Je participe !
+                    </button>
+                    {% else %}
+                    <a href="{{ path('app_login') }}" class="btn w-100 btn-lg mb-2"
+                       style="background: #1a237e; color: white;">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i>Se connecter pour participer
+                    </a>
+                    {% endif %}
+
+                    <a href="{{ path('app_evenement_index') }}"
+                       class="btn btn-outline-secondary w-100 btn-sm">
+                        <i class="fa-solid fa-arrow-left me-1"></i>Retour aux événements
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{% if evenement.latitude and evenement.longitude %}
+<script>
+    const map = L.map('map').setView([{{ evenement.latitude }}, {{ evenement.longitude }}], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    L.marker([{{ evenement.latitude }}, {{ evenement.longitude }}])
+        .addTo(map)
+        .bindPopup('<strong>{{ evenement.titre }}</strong><br>{{ evenement.adresse }}')
+        .openPopup();
+</script>
+{% endif %}
+{% endblock %}
