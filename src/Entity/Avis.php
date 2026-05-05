@@ -31,11 +31,9 @@ class Avis
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'avis')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Lieu $lieu = null;
 
     #[ORM\ManyToOne(inversedBy: 'avis')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Terrain $terrain = null;
 
     public function getId(): ?int

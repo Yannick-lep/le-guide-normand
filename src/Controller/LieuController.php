@@ -67,13 +67,24 @@ class LieuController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'show')]
-    public function show(Lieu $lieu, EntityManagerInterface $em): Response
+    public function show(
+        Lieu $lieu,
+        EntityManagerInterface $em,
+        Request $request
+        ): Response
     {
         $lieu->setNombreVues($lieu->getNombreVues() + 1);
         $em->flush();
 
+        $avis = new \App\Entity\Avis();
+        $formAvis = $this->createForm(\App\Form\AvisType::class, $avis, [
+            'action' => $this->generateUrl('app_avis_lieu_new', ['id' => $lieu->getId()]),
+            'method' => 'POST',
+        ]);
+
         return $this->render('lieu/show.html.twig', [
             'lieu' => $lieu,
+            'formAvis' => $formAvis,
         ]);
     }
 }
