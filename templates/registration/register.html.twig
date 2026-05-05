@@ -1,19 +1,98 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription — Le Guide Normand{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
 
-    {{ form_errors(registrationForm) }}
+<div class="min-vh-100 d-flex align-items-center py-5"
+     style="background: linear-gradient(135deg, #f5f0e8 0%, #e8e0d0 100%);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                {# Logo + titre #}
+                <div class="text-center mb-4">
+                    <img src="{{ asset('images/logo.png') }}" alt="Le Guide Normand" height="80" class="mb-3">
+                    <h2 style="font-family: 'Playfair Display', serif; color: var(--normand-red);">
+                        Rejoignez la communauté !
+                    </h2>
+                    <p class="text-muted">Partagez vos bons plans normands gratuitement</p>
+                </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                <div class="card border-0 shadow-lg" style="border-radius: 16px;">
+                    <div class="card-body p-4 p-lg-5">
+
+                        {{ form_errors(registrationForm) }}
+
+                        {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="fa-solid fa-envelope me-2" style="color: var(--normand-red);"></i>
+                                Adresse email
+                            </label>
+                            {{ form_widget(registrationForm.email, {
+                                'attr': {
+                                    'class': 'form-control form-control-lg',
+                                    'placeholder': 'votre@email.fr'
+                                }
+                            }) }}
+                            {{ form_errors(registrationForm.email) }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="fa-solid fa-lock me-2" style="color: var(--normand-red);"></i>
+                                Mot de passe
+                            </label>
+                            {{ form_widget(registrationForm.plainPassword, {
+                                'attr': {
+                                    'class': 'form-control form-control-lg',
+                                    'placeholder': 'Minimum 6 caractères'
+                                }
+                            }) }}
+                            {{ form_errors(registrationForm.plainPassword) }}
+                            <div class="form-text">Choisissez un mot de passe sécurisé d'au moins 6 caractères.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                                <label class="form-check-label text-muted small">
+                                    J'accepte les <a href="#" style="color: var(--normand-red);">conditions d'utilisation</a>
+                                    et la <a href="#" style="color: var(--normand-red);">politique de confidentialité</a>
+                                </label>
+                            </div>
+                            {{ form_errors(registrationForm.agreeTerms) }}
+                        </div>
+
+                        <button type="submit" class="btn btn-normand w-100 btn-lg mb-3">
+                            <i class="fa-solid fa-user-plus me-2"></i>Créer mon compte
+                        </button>
+
+                        <div class="text-center">
+                            <span class="text-muted small">Déjà un compte ?</span>
+                            <a href="{{ path('app_login') }}"
+                               class="text-decoration-none fw-bold ms-1"
+                               style="color: var(--normand-red);">
+                                Se connecter
+                            </a>
+                        </div>
+
+                        {{ form_end(registrationForm) }}
+
+                    </div>
+                </div>
+
+                <div class="text-center mt-3">
+                    <a href="{{ path('app_home') }}" class="text-muted text-decoration-none small">
+                        <i class="fa-solid fa-arrow-left me-1"></i>Retour à l'accueil
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
