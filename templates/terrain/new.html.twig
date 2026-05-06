@@ -1,0 +1,212 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Proposer un terrain — Le Guide Normand{% endblock %}
+
+{% block body %}
+
+<div style="background: linear-gradient(135deg, var(--normand-green), #1a3a16); color: white; padding: 2.5rem 0; position: relative; overflow: hidden;">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-2">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_home') }}" class="text-white-50 text-decoration-none">Accueil</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_terrain_index') }}" class="text-white-50 text-decoration-none">Terrains</a>
+                </li>
+                <li class="breadcrumb-item active text-white">Proposer un terrain</li>
+            </ol>
+        </nav>
+        <h1 style="font-family:'Playfair Display',serif;">
+            <i class="fa-solid fa-tent me-2"></i>Proposer mon terrain
+        </h1>
+        <p class="opacity-75 mb-0">Ouvrez votre jardin aux randonneurs et cyclotouristes normands</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-lg-5">
+
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                    {# Infos générales #}
+                    <h5 class="fw-bold mb-4" style="color: var(--normand-green);">
+                        <i class="fa-solid fa-circle-info me-2"></i>Informations générales
+                    </h5>
+
+                    <div class="mb-3">
+                        {{ form_label(form.titre) }}
+                        {{ form_widget(form.titre) }}
+                        {{ form_errors(form.titre) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description) }}
+                        {{ form_errors(form.description) }}
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-8">
+                            {{ form_label(form.adresse) }}
+                            {{ form_widget(form.adresse) }}
+                            {{ form_errors(form.adresse) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_label(form.capacitePersonnes) }}
+                            {{ form_widget(form.capacitePersonnes) }}
+                            {{ form_errors(form.capacitePersonnes) }}
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    {# Équipements #}
+                    <h5 class="fw-bold mb-4" style="color: var(--normand-green);">
+                        <i class="fa-solid fa-list-check me-2"></i>Équipements disponibles
+                    </h5>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 border rounded-3 text-center">
+                                <i class="fa-solid fa-shower fa-2x mb-2 text-success"></i>
+                                <div>{{ form_widget(form.aDouche) }}</div>
+                                {{ form_label(form.aDouche, null, {'label_attr': {'class': 'form-check-label small fw-bold'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 border rounded-3 text-center">
+                                <i class="fa-solid fa-bolt fa-2x mb-2 text-warning"></i>
+                                <div>{{ form_widget(form.aElectricite) }}</div>
+                                {{ form_label(form.aElectricite, null, {'label_attr': {'class': 'form-check-label small fw-bold'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 border rounded-3 text-center">
+                                <i class="fa-solid fa-restroom fa-2x mb-2 text-info"></i>
+                                <div>{{ form_widget(form.aToilettes) }}</div>
+                                {{ form_label(form.aToilettes, null, {'label_attr': {'class': 'form-check-label small fw-bold'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 border rounded-3 text-center">
+                                <i class="fa-solid fa-wifi fa-2x mb-2 text-primary"></i>
+                                <div>{{ form_widget(form.aWifi) }}</div>
+                                {{ form_label(form.aWifi, null, {'label_attr': {'class': 'form-check-label small fw-bold'}}) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    {# Prix et localisation #}
+                    <h5 class="fw-bold mb-4" style="color: var(--normand-green);">
+                        <i class="fa-solid fa-map-pin me-2"></i>Localisation & Tarif
+                    </h5>
+
+                    <div class="mb-3">
+                        {{ form_label(form.prixNuit) }}
+                        {{ form_widget(form.prixNuit) }}
+                        {{ form_errors(form.prixNuit) }}
+                        {{ form_help(form.prixNuit) }}
+                    </div>
+
+                    <div class="alert alert-success d-flex gap-2 mb-3">
+                        <i class="fa-solid fa-circle-info mt-1"></i>
+                        <div><strong>Astuce :</strong> Cliquez sur la carte pour placer votre terrain.</div>
+                    </div>
+
+                    <div id="map-picker" style="height: 300px; border-radius: 10px; margin-bottom: 1rem; border: 2px solid #dee2e6;"></div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            {{ form_label(form.latitude) }}
+                            {{ form_widget(form.latitude) }}
+                            {{ form_help(form.latitude) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_label(form.longitude) }}
+                            {{ form_widget(form.longitude) }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 justify-content-end">
+                        <a href="{{ path('app_terrain_index') }}" class="btn btn-outline-secondary">Annuler</a>
+                        <button type="submit" class="btn px-5" style="background: var(--normand-green); color: white;">
+                            <i class="fa-solid fa-paper-plane me-2"></i>Proposer mon terrain
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    const map = L.map('map-picker').setView([49.1829, 0.3707], 8);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    let marker = null;
+    const latInput = document.getElementById('terrain_latitude');
+    const lngInput = document.getElementById('terrain_longitude');
+
+    map.on('click', function(e) {
+        const lat = e.latlng.lat.toFixed(6);
+        const lng = e.latlng.lng.toFixed(6);
+        latInput.value = lat;
+        lngInput.value = lng;
+        if (marker) {
+            marker.setLatLng(e.latlng);
+        } else {
+            marker = L.marker(e.latlng).addTo(map);
+        }
+        marker.bindPopup('📍 ' + lat + ', ' + lng).openPopup();
+    });
+   // ── Géocodage automatique depuis l'adresse ──
+const adresseInput = document.getElementById('terrain_adresse');
+
+adresseInput.addEventListener('blur', async function() {
+    const adresse = this.value.trim();
+    if (!adresse) return;
+
+    try {
+        const response = await fetch(
+            'https://nominatim.openstreetmap.org/search?format=json&q=' 
+            + encodeURIComponent(adresse + ', Normandie, France')
+            + '&limit=1',
+            { headers: { 'Accept-Language': 'fr' } }
+        );
+        const data = await response.json();
+
+        if (data.length > 0) {
+            const lat = parseFloat(data[0].lat).toFixed(6);
+            const lng = parseFloat(data[0].lon).toFixed(6);
+
+            latInput.value = lat;
+            lngInput.value = lng;
+
+            map.setView([lat, lng], 13);
+
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(map);
+            }
+            marker.bindPopup('📍 ' + adresse).openPopup();
+        }
+    } catch (e) {
+        console.log('Géocodage échoué', e);
+    }
+});
+</script>
+{% endblock %}

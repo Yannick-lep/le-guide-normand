@@ -147,5 +147,41 @@
 
         marker.bindPopup('📍 ' + lat + ', ' + lng).openPopup();
     });
+    // ── Géocodage automatique depuis l'adresse ──
+const adresseInput = document.getElementById('lieu_adresse');
+
+adresseInput.addEventListener('blur', async function() {
+    const adresse = this.value.trim();
+    if (!adresse) return;
+
+    try {
+        const response = await fetch(
+            'https://nominatim.openstreetmap.org/search?format=json&q=' 
+            + encodeURIComponent(adresse + ', Normandie, France')
+            + '&limit=1',
+            { headers: { 'Accept-Language': 'fr' } }
+        );
+        const data = await response.json();
+
+        if (data.length > 0) {
+            const lat = parseFloat(data[0].lat).toFixed(6);
+            const lng = parseFloat(data[0].lon).toFixed(6);
+
+            latInput.value = lat;
+            lngInput.value = lng;
+
+            map.setView([lat, lng], 13);
+
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(map);
+            }
+            marker.bindPopup('📍 ' + adresse).openPopup();
+        }
+    } catch (e) {
+        console.log('Géocodage échoué', e);
+    }
+});
 </script>
 {% endblock %}

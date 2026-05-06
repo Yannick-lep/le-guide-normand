@@ -78,7 +78,8 @@
                     <strong>{{ terrains|length }}</strong> terrain{{ terrains|length > 1 ? 's' : '' }} disponible{{ terrains|length > 1 ? 's' : '' }}
                 </span>
                 {% if app.user %}
-                <a href="#" class="btn btn-normand btn-sm">
+                <a href="{{ path('app_terrain_new') }}" class="btn btn-normand btn-sm"
+                    style="background: var(--normand-green);">
                     <i class="fa-solid fa-plus me-1"></i>Proposer mon terrain
                 </a>
                 {% endif %}
