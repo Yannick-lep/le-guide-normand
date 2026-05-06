@@ -2,55 +2,237 @@
 
 {% block title %}Le Guide Normand — Découvrez la Normandie{% endblock %}
 
+{% block stylesheets %}
+<style>
+    /* ── HERO ANIMÉ ── */
+    .hero-animated {
+        min-height: 90vh;
+        background: linear-gradient(135deg, #6B1414 0%, #8B1A1A 40%, #2D5A27 100%);
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-animated::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        animation: bgMove 20s linear infinite;
+    }
+
+    @keyframes bgMove {
+        from { background-position: 0 0; }
+        to   { background-position: 100px 100px; }
+    }
+
+    .hero-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 700;
+        line-height: 1.1;
+        animation: fadeInUp 0.8s ease both;
+    }
+
+    .hero-subtitle {
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        opacity: 0.85;
+        animation: fadeInUp 0.8s ease 0.2s both;
+    }
+
+    .hero-btns {
+        animation: fadeInUp 0.8s ease 0.4s both;
+    }
+
+    .hero-stats {
+        animation: fadeInUp 0.8s ease 0.6s both;
+    }
+
+    .hero-image {
+        animation: fadeInRight 1s ease 0.3s both;
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(40px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* ── FEATURES ── */
+    .feature-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+        transition: transform 0.3s;
+    }
+    .feature-card:hover .feature-icon {
+        transform: scale(1.1) rotate(-5deg);
+    }
+
+    /* ── STATS COUNTER ── */
+    .stat-counter {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--normand-red);
+        line-height: 1;
+    }
+
+    /* ── TYPING EFFECT ── */
+    .typing-text::after {
+        content: '|';
+        animation: blink 0.8s step-end infinite;
+        color: var(--normand-gold);
+    }
+    @keyframes blink {
+        50% { opacity: 0; }
+    }
+</style>
+{% endblock %}
+
 {% block body %}
 
-{# ── HERO ── #}
-<section class="hero-section">
-    <div class="container text-center position-relative">
-        <h1 class="display-4 fw-bold mb-3" style="font-family: 'Playfair Display', serif;">
-            Découvrez la Normandie
-        </h1>
-        <p class="lead mb-4 opacity-75">
-            Randonnées, restaurants, lieux secrets, terrains de bivouac...<br>
-            Partagés par la communauté, pour la communauté.
-        </p>
-        <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="{{ path('app_lieu_index') }}" class="btn btn-light btn-lg px-4 fw-600">
-                <i class="fa-solid fa-map-location-dot me-2"></i>Explorer les bons plans
-            </a>
-            {% if not app.user %}
-            <a href="{{ path('app_register') }}" class="btn btn-outline-light btn-lg px-4">
-                <i class="fa-solid fa-user-plus me-2"></i>Rejoindre la communauté
-            </a>
-            {% endif %}
-        </div>
+{# ── HERO ANIMÉ ── #}
+<section class="hero-animated">
+    <div class="container position-relative">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6 text-white">
+                <div class="mb-3">
+                    <span style="background: var(--normand-gold); color: var(--normand-red-dark); padding: 0.3rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem;">
+                        🌿 Communauté Normande
+                    </span>
+                </div>
+                <h1 class="hero-title text-white mb-3">
+                    Découvrez la<br>
+                    <span style="color: var(--normand-gold);" id="typing-word">Normandie</span>
+                    <br>autrement
+                </h1>
+                <p class="hero-subtitle mb-4">
+                    Randonnées secrètes, restaurants authentiques, terrains de bivouac chez l'habitant...
+                    Partagés par des passionnés, pour des passionnés.
+                </p>
+                <div class="hero-btns d-flex gap-3 flex-wrap mb-5">
+                    <a href="{{ path('app_lieu_index') }}"
+                       class="btn btn-light btn-lg px-4 fw-bold"
+                       style="color: var(--normand-red);">
+                        <i class="fa-solid fa-compass me-2"></i>Explorer
+                    </a>
+                    <a href="{{ path('app_carte') }}"
+                       class="btn btn-outline-light btn-lg px-4">
+                        <i class="fa-solid fa-map me-2"></i>Voir la carte
+                    </a>
+                    {% if not app.user %}
+                    <a href="{{ path('app_register') }}"
+                       class="btn btn-lg px-4"
+                       style="background: var(--normand-gold); color: var(--normand-red-dark); font-weight: 600;">
+                        <i class="fa-solid fa-user-plus me-2"></i>Rejoindre
+                    </a>
+                    {% endif %}
+                </div>
 
-        {# Stats #}
-        <div class="row g-3 mt-4 justify-content-center">
-            <div class="col-auto">
-                <div class="bg-white bg-opacity-10 rounded-3 px-4 py-2 text-white">
-                    <div class="fw-bold fs-4">{{ derniers_lieux|length }}+</div>
-                    <div class="small opacity-75">Bons plans</div>
+                {# Stats animées #}
+                <div class="hero-stats d-flex gap-4 flex-wrap">
+                    <div class="text-white">
+                        <div class="fw-bold fs-3 lh-1" style="color: var(--normand-gold);">
+                            {{ derniers_lieux|length }}+
+                        </div>
+                        <div class="small opacity-75">Bons plans</div>
+                    </div>
+                    <div class="text-white">
+                        <div class="fw-bold fs-3 lh-1" style="color: var(--normand-gold);">
+                            {{ derniers_terrains|length }}+
+                        </div>
+                        <div class="small opacity-75">Terrains</div>
+                    </div>
+                    <div class="text-white">
+                        <div class="fw-bold fs-3 lh-1" style="color: var(--normand-gold);">
+                            {{ prochains_evenements|length }}+
+                        </div>
+                        <div class="small opacity-75">Événements</div>
+                    </div>
                 </div>
             </div>
-            <div class="col-auto">
-                <div class="bg-white bg-opacity-10 rounded-3 px-4 py-2 text-white">
-                    <div class="fw-bold fs-4">{{ derniers_terrains|length }}+</div>
-                    <div class="small opacity-75">Terrains</div>
-                </div>
+
+            {# Logo animé #}
+            <div class="col-lg-6 text-center hero-image d-none d-lg-block">
+                <img src="{{ asset('images/logo1.png') }}" alt="Le Guide Normand"
+                     style="max-height: 420px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4)); mix-blend-mode: screen;">
             </div>
-            <div class="col-auto">
-                <div class="bg-white bg-opacity-10 rounded-3 px-4 py-2 text-white">
-                    <div class="fw-bold fs-4">{{ prochains_evenements|length }}+</div>
-                    <div class="small opacity-75">Événements</div>
+        </div>
+    </div>
+
+    {# Vague en bas #}
+    <div style="position:absolute;bottom:0;left:0;right:0;">
+        <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#FAFAF8"/>
+        </svg>
+    </div>
+</section>
+
+{# ── FEATURES ── #}
+<section class="py-5 reveal">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Pourquoi Le Guide Normand ?</h2>
+            <div class="section-divider mx-auto"></div>
+            <p class="text-muted">Une communauté de passionnés au service des explorateurs normands</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3 text-center feature-card reveal">
+                <div class="feature-icon mx-auto" style="background:#FEF3C7;">
+                    🗺️
                 </div>
+                <h5 class="fw-bold">Lieux authentiques</h5>
+                <p class="text-muted small">Des adresses partagées par de vrais normands, loin des sentiers battus.</p>
+            </div>
+            <div class="col-md-3 text-center feature-card reveal">
+                <div class="feature-icon mx-auto" style="background:#DCFCE7;">
+                    ⛺
+                </div>
+                <h5 class="fw-bold">Bivouac chez l'habitant</h5>
+                <p class="text-muted small">Des particuliers ouvrent leur jardin aux randonneurs et cyclotouristes.</p>
+            </div>
+            <div class="col-md-3 text-center feature-card reveal">
+                <div class="feature-icon mx-auto" style="background:#EDE9FE;">
+                    📅
+                </div>
+                <h5 class="fw-bold">Agenda communautaire</h5>
+                <p class="text-muted small">Randonnées, festivals, visites... Ne ratez plus rien en Normandie.</p>
+            </div>
+            <div class="col-md-3 text-center feature-card reveal">
+                <div class="feature-icon mx-auto" style="background:#FEE2E2;">
+                    ⭐
+                </div>
+                <h5 class="fw-bold">Avis vérifiés</h5>
+                <p class="text-muted small">Des avis honnêtes de la communauté pour guider vos choix.</p>
             </div>
         </div>
     </div>
 </section>
 
 {# ── DERNIERS BONS PLANS ── #}
-<section class="py-5">
+<section class="py-5 reveal" style="background: var(--normand-cream);">
     <div class="container">
         <div class="d-flex justify-content-between align-items-end mb-4">
             <div>
@@ -66,33 +248,28 @@
         <div class="text-center py-5 text-muted">
             <i class="fa-solid fa-map-location-dot fa-3x mb-3 opacity-25"></i>
             <p>Aucun bon plan pour le moment.<br>
-            <a href="#" class="text-decoration-none" style="color: var(--normand-red);">Soyez le premier à en partager un !</a></p>
+            <a href="{{ path('app_lieu_new') }}" style="color: var(--normand-red);">Soyez le premier à en partager un !</a></p>
         </div>
         {% else %}
         <div class="row g-4">
             {% for lieu in derniers_lieux %}
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-4 reveal">
                 <div class="card card-normand h-100">
                     <div class="card-img-top d-flex align-items-center justify-content-center"
-                         style="height: 200px; background: linear-gradient(135deg, #8B1A1A, #2D5A27);">
-                        <i class="fa-solid fa-image fa-3x text-white opacity-25"></i>
+                         style="height: 180px; background: linear-gradient(135deg, #8B1A1A, #2D5A27);">
+                        <i class="fa-solid {{ lieu.categorie ? lieu.categorie.icone : 'fa-map-pin' }} fa-3x text-white opacity-50"></i>
                     </div>
                     <div class="card-body d-flex flex-column">
                         <div class="mb-2">
-                            <span class="badge-categorie">
-                                {{ lieu.categorie ? lieu.categorie.nom : 'Non catégorisé' }}
-                            </span>
+                            <span class="badge-categorie">{{ lieu.categorie ? lieu.categorie.nom : 'Non catégorisé' }}</span>
                         </div>
-                        <h5 class="card-title fw-bold">{{ lieu.titre }}</h5>
-                        <p class="card-text text-muted small flex-grow-1">
-                            {{ lieu.description|slice(0, 100) }}...
-                        </p>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
+                        <h6 class="card-title fw-bold">{{ lieu.titre }}</h6>
+                        <p class="card-text text-muted small flex-grow-1">{{ lieu.description|slice(0, 90) }}...</p>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
                             <small class="text-muted">
-                                <i class="fa-solid fa-map-pin me-1"></i>
-                                {{ lieu.adresse ?? 'Normandie' }}
+                                <i class="fa-solid fa-map-pin me-1"></i>{{ lieu.adresse ?? 'Normandie' }}
                             </small>
-                            <a href="#" class="btn btn-normand btn-sm">Voir</a>
+                            <a href="{{ path('app_lieu_show', {slug: lieu.slug}) }}" class="btn btn-normand btn-sm">Voir</a>
                         </div>
                     </div>
                 </div>
@@ -104,7 +281,7 @@
 </section>
 
 {# ── TERRAINS BIVOUAC ── #}
-<section class="py-5" style="background: var(--normand-cream);">
+<section class="py-5 reveal">
     <div class="container">
         <div class="d-flex justify-content-between align-items-end mb-4">
             <div>
@@ -125,7 +302,7 @@
         {% else %}
         <div class="row g-4">
             {% for terrain in derniers_terrains %}
-            <div class="col-md-4">
+            <div class="col-md-4 reveal">
                 <div class="card card-normand h-100">
                     <div class="card-body">
                         <h5 class="fw-bold">{{ terrain.titre }}</h5>
@@ -137,10 +314,10 @@
                             {% if terrain.aWifi %}<span class="badge bg-primary"><i class="fa-solid fa-wifi me-1"></i>Wifi</span>{% endif %}
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold" style="color: var(--normand-red);">
-                                {% if terrain.prixNuit %}{{ terrain.prixNuit }} €/nuit{% else %}Gratuit{% endif %}
+                            <span class="fw-bold" style="color: var(--normand-green);">
+                                {% if terrain.prixNuit %}{{ terrain.prixNuit }} €/nuit{% else %}<span class="text-success">Gratuit</span>{% endif %}
                             </span>
-                            <a href="#" class="btn btn-normand btn-sm">Voir</a>
+                            <a href="{{ path('app_terrain_show', {id: terrain.id}) }}" class="btn btn-normand btn-sm">Voir</a>
                         </div>
                     </div>
                 </div>
@@ -152,7 +329,7 @@
 </section>
 
 {# ── ÉVÉNEMENTS ── #}
-<section class="py-5">
+<section class="py-5 reveal" style="background: var(--normand-cream);">
     <div class="container">
         <div class="d-flex justify-content-between align-items-end mb-4">
             <div>
@@ -172,22 +349,22 @@
         {% else %}
         <div class="row g-4">
             {% for evenement in prochains_evenements %}
-            <div class="col-md-4">
+            <div class="col-md-4 reveal">
                 <div class="card card-normand h-100">
                     <div class="card-body">
                         <div class="d-flex align-items-center gap-2 mb-3">
-                            <div class="text-center rounded-2 p-2" style="background: var(--normand-red); color: white; min-width: 50px;">
+                            <div class="text-center rounded-2 p-2" style="background: #1a237e; color: white; min-width: 50px;">
                                 <div class="fw-bold fs-5 lh-1">{{ evenement.dateDebut|date('d') }}</div>
                                 <div class="small text-uppercase">{{ evenement.dateDebut|date('M') }}</div>
                             </div>
-                            <h5 class="fw-bold mb-0">{{ evenement.titre }}</h5>
+                            <h6 class="fw-bold mb-0">{{ evenement.titre }}</h6>
                         </div>
                         <p class="text-muted small">{{ evenement.description|slice(0, 80) }}...</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="badge {{ evenement.estGratuit ? 'bg-success' : 'bg-secondary' }}">
                                 {{ evenement.estGratuit ? 'Gratuit' : evenement.prix ~ ' €' }}
                             </span>
-                            <a href="#" class="btn btn-normand btn-sm">Voir</a>
+                            <a href="{{ path('app_evenement_show', {id: evenement.id}) }}" class="btn btn-normand btn-sm">Voir</a>
                         </div>
                     </div>
                 </div>
@@ -198,19 +375,61 @@
     </div>
 </section>
 
-{# ── CTA REJOINDRE ── #}
+{# ── CTA ── #}
 {% if not app.user %}
-<section class="py-5" style="background: var(--normand-red);">
+<section class="py-5 reveal" style="background: var(--normand-red);">
     <div class="container text-center text-white">
-        <h2 style="font-family: 'Playfair Display', serif;" class="mb-3">
+        <h2 style="font-family:'Playfair Display',serif;" class="mb-3">
             Vous connaissez un coin secret en Normandie ?
         </h2>
-        <p class="opacity-75 mb-4">Rejoignez la communauté et partagez vos bons plans avec les autres explorateurs normands.</p>
-        <a href="{{ path('app_register') }}" class="btn btn-light btn-lg px-5" style="color: var(--normand-red); font-weight: 600;">
+        <p class="opacity-75 mb-4">Rejoignez la communauté et partagez vos bons plans.</p>
+        <a href="{{ path('app_register') }}" class="btn btn-light btn-lg px-5"
+           style="color: var(--normand-red); font-weight: 600;">
             <i class="fa-solid fa-user-plus me-2"></i>Rejoindre gratuitement
         </a>
     </div>
 </section>
 {% endif %}
 
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // ── Typing effect ──
+    const words = ['Normandie', 'campagne', 'côte', 'forêts', 'histoire'];
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const el = document.getElementById('typing-word');
+
+    function type() {
+        const word = words[wordIndex];
+        if (isDeleting) {
+            el.textContent = word.substring(0, charIndex - 1);
+            charIndex--;
+        } else {
+            el.textContent = word.substring(0, charIndex + 1);
+            charIndex++;
+        }
+        if (!isDeleting && charIndex === word.length) {
+            setTimeout(() => { isDeleting = true; }, 2000);
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+        }
+        setTimeout(type, isDeleting ? 80 : 120);
+    }
+    type();
+
+    // ── Scroll reveal ──
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 {% endblock %}
