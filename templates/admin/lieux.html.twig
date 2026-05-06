@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des lieux — Admin{% endblock %}
+
+{% block body %}
+
+<div style="background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 2rem 0;">
+    <div class="container">
+        <div class="d-flex align-items-center gap-3">
+            <a href="{{ path('app_admin_index') }}" class="btn btn-outline-light btn-sm">← Dashboard</a>
+            <h1 style="font-family:'Playfair Display',serif;" class="mb-0">
+                <i class="fa-solid fa-map-location-dot me-2"></i>Gestion des lieux
+            </h1>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Titre</th>
+                    <th>Catégorie</th>
+                    <th>Auteur</th>
+                    <th>Date</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lieu in lieux %}
+                <tr>
+                    <td>
+                        <strong>{{ lieu.titre }}</strong><br>
+                        <small class="text-muted">{{ lieu.adresse }}</small>
+                    </td>
+                    <td>
+                        <span class="badge" style="background:var(--normand-red);">
+                            {{ lieu.categorie ? lieu.categorie.nom : '—' }}
+                        </span>
+                    </td>
+                    <td><small>{{ lieu.user.email }}</small></td>
+                    <td><small>{{ lieu.createdAt|date('d/m/Y') }}</small></td>
+                    <td>
+                        <span class="badge {{ lieu.estValide ? 'bg-success' : 'bg-warning text-dark' }}">
+                            {{ lieu.estValide ? 'Publié' : 'En attente' }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="{{ path('app_lieu_show', {slug: lieu.slug}) }}"
+                               class="btn btn-sm btn-outline-secondary" target="_blank">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                            <a href="{{ path('app_admin_lieu_valider', {id: lieu.id}) }}"
+                               class="btn btn-sm {{ lieu.estValide ? 'btn-warning' : 'btn-success' }}">
+                                <i class="fa-solid {{ lieu.estValide ? 'fa-eye-slash' : 'fa-check' }}"></i>
+                                {{ lieu.estValide ? 'Dépublier' : 'Valider' }}
+                            </a>
+                            <a href="{{ path('app_admin_lieu_supprimer', {id: lieu.id}) }}"
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('Supprimer ce lieu ?')">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

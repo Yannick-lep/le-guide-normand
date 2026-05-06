@@ -23,25 +23,25 @@ class Evenement
     #[ORM\Column]
     private ?\DateTimeImmutable $dateDebut = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateFin = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $adresse = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $latitude = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $longitude = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $placesMax = null;
 
     #[ORM\Column]
     private ?bool $estGratuit = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2, nullable: true)]
     private ?string $prix = null;
 
     #[ORM\Column]
@@ -52,7 +52,7 @@ class Evenement
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'evenements')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Lieu $lieu = null;
 
     public function getId(): ?int
@@ -149,7 +149,7 @@ class Evenement
         return $this->placesMax;
     }
 
-    public function setPlacesMax(int $placesMax): static
+    public function setPlacesMax(?int $placesMax): static
     {
         $this->placesMax = $placesMax;
 
@@ -173,7 +173,7 @@ class Evenement
         return $this->prix;
     }
 
-    public function setPrix(string $prix): static
+    public function setPrix(?string $prix): static
     {
         $this->prix = $prix;
 

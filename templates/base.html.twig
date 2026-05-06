@@ -319,6 +319,14 @@
 									<a class="dropdown-item" href="#">
 										<i class="fa-solid fa-tent me-2"></i>Mes terrains</a>
 								</li>
+
+								{% if 'ROLE_ADMIN' in app.user.roles %}
+								<li>
+									<a class="dropdown-item text-danger fw-bold" href="{{ path('app_admin_index') }}">
+										<i class="fa-solid fa-shield-halved me-2"></i>Administration
+									</a>
+								</li>
+								{% endif %}
 								<li><hr class="dropdown-divider"></li>
 								<li>
 									<a class="dropdown-item text-danger" href="{{ path('app_logout') }}">

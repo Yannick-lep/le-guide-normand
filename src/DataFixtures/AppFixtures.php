@@ -43,6 +43,13 @@ class AppFixtures extends Fixture
         $user->setPassword($this->hasher->hashPassword($user, 'password'));
         $manager->persist($user);
 
+        // User admin
+        $admin = new User();
+        $admin->setEmail('admin@guidenormand.fr');
+        $admin->setPassword($this->hasher->hashPassword($admin, 'admin123'));
+        $admin->setRoles(['ROLE_ADMIN']);
+        $manager->persist($admin);
+
         // Lieux
         $lieux = [
             ['titre' => 'Falaises d\'Étretat', 'desc' => 'Les célèbres falaises d\'Étretat offrent un panorama exceptionnel sur la Manche. Idéal pour une randonnée en bord de mer avec des vues à couper le souffle.', 'adresse' => 'Étretat, Seine-Maritime', 'lat' => 49.7070, 'lng' => 0.2049, 'cat' => 0],

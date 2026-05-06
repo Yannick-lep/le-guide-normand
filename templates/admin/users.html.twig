@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des utilisateurs - Admin{% endblock %}
+
+{% block body %}
+
+<div style="background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 2rem 0;">
+    <div class="container">
+        <div class="d-flex align-items-center gap-3">
+            <a href="{{ path('app_admin_index') }}" class="btn btn-outline-light btn-sm">← Dashboard</a>
+            <h1 style="font-family:'Playfair Display', serif;" class="mb-0">
+                <i class="fa-solid fa-users me-2"></i>Gestion des utilisateurs
+            </h1>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Email</th>
+                    <th>Ville</th>
+                    <th>Rôles</th>
+                    <th>Contributions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="rounder-circle d-flex align-items-center justify-content-center fw-bold"
+                                style="width:36px; height:36px; background: var(--normand-gold); color:var(--normand-red);flex-shrink:0;">
+                                {{ user.email|slice(0,1)|upper }}
+                            </div>
+                            <div>
+                                <div class="fw-bold small">
+                                    {{ user.prenom }} {{ user.nom }}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><small>{{ user.email }}</small></td>
+                    <td><small>{{ user.ville ?? '-' }}</small></td>
+                    <td>
+                        {% for role in user.roles %}
+                            {% if role == 'ROLE_ADMIN' %}
+                                <span class="badge bg-danger">Admin</span>
+                            {% elseif role == 'ROLE_USER' %}
+                                <span class="badge bg-secondary">User</span>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <small>
+                            <i class="fa-solid fa-map-pin me-1" style="color:var(--normand-red);"></i>{{ user.lieus|length }} lieux
+                            · <i class="fa-solid fa-tent me-1 text-success"></i>{{ user.terrains|length }} terrains
+                            · <i class="fa-solid fa-star me-1" style="color:var(--normand-gold);"></i>{{ user.avis|length }} avis
+                        </small>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
