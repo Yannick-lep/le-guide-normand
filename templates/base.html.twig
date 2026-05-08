@@ -321,11 +321,11 @@
 								</li>
 
 								{% if 'ROLE_ADMIN' in app.user.roles %}
-								<li>
-									<a class="dropdown-item text-danger fw-bold" href="{{ path('app_admin_index') }}">
-										<i class="fa-solid fa-shield-halved me-2"></i>Administration
-									</a>
-								</li>
+									<li>
+										<a class="dropdown-item text-danger fw-bold" href="{{ path('app_admin_index') }}">
+											<i class="fa-solid fa-shield-halved me-2"></i>Administration
+										</a>
+									</li>
 								{% endif %}
 								<li><hr class="dropdown-divider"></li>
 								<li>
@@ -347,6 +347,15 @@
 									Connexion
 								</a>
 							</li>
+							{# Barre de recherche #}
+							<form class="d-flex mx-3" method="get" action="{{ path('app_recherche') }}">
+								<div class="input-group input-group-sm" style="width: 220px;">
+									<input type="text" name="q" class="form-control" placeholder="Rechercher..." style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.2);color:white;">
+									<button class="btn" type="submit" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.2);color:white;">
+										<i class="fa-solid fa-search"></i>
+									</button>
+								</div>
+							</form>
 							<li class="nav-item">
 								<a class="nav-link btn-navbar" href="{{ path('app_register') }}">
 									<i class="fa-solid fa-user-plus"></i>
