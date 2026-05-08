@@ -54,7 +54,7 @@
                     <strong>{{ evenements|length }}</strong> événement{{ evenements|length > 1 ? 's' : '' }} à venir
                 </span>
                 {% if app.user %}
-                <a href="#" class="btn btn-sm" style="background: #1a237e; color: white;">
+                <a href="{{ path('app_evenement_new') }}" class="btn btn-sm" style="background: #1a237e; color: white;">
                     <i class="fa-solid fa-plus me-1"></i>Proposer un événement
                 </a>
                 {% endif %}

@@ -1,0 +1,212 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Proposer un événement — Le Guide Normand{% endblock %}
+
+{% block body %}
+
+<div style="background: linear-gradient(135deg, #1a237e, #283593); color: white; padding: 2.5rem 0; position: relative; overflow: hidden;">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-2">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_home') }}" class="text-white-50 text-decoration-none">Accueil</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_evenement_index') }}" class="text-white-50 text-decoration-none">Événements</a>
+                </li>
+                <li class="breadcrumb-item active text-white">Proposer un événement</li>
+            </ol>
+        </nav>
+        <h1 style="font-family:'Playfair Display',serif;">
+            <i class="fa-solid fa-calendar-plus me-2"></i>Proposer un événement
+        </h1>
+        <p class="opacity-75 mb-0">Partagez une sortie, une randonnée ou un festival avec la communauté</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-lg-5">
+
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                    <h5 class="fw-bold mb-4" style="color: #1a237e;">
+                        <i class="fa-solid fa-circle-info me-2"></i>Informations générales
+                    </h5>
+
+                    <div class="mb-3">
+                        {{ form_label(form.titre) }}
+                        {{ form_widget(form.titre) }}
+                        {{ form_errors(form.titre) }}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description) }}
+                        {{ form_errors(form.description) }}
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="fw-bold mb-4" style="color: #1a237e;">
+                        <i class="fa-solid fa-clock me-2"></i>Date et horaires
+                    </h5>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            {{ form_label(form.dateDebut) }}
+                            {{ form_widget(form.dateDebut) }}
+                            {{ form_errors(form.dateDebut) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_label(form.dateFin) }}
+                            {{ form_widget(form.dateFin) }}
+                            {{ form_errors(form.dateFin) }}
+                            <div class="form-text">Optionnel</div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="fw-bold mb-4" style="color: #1a237e;">
+                        <i class="fa-solid fa-euro-sign me-2"></i>Tarif & Places
+                    </h5>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded-3 text-center">
+                                <i class="fa-solid fa-gift fa-2x mb-2 text-success"></i>
+                                <div>{{ form_widget(form.estGratuit) }}</div>
+                                {{ form_label(form.estGratuit, null, {'label_attr': {'class': 'form-check-label small fw-bold'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_label(form.prix) }}
+                            {{ form_widget(form.prix) }}
+                            {{ form_errors(form.prix) }}
+                            <div class="form-text">Si payant</div>
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_label(form.placesMax) }}
+                            {{ form_widget(form.placesMax) }}
+                            {{ form_errors(form.placesMax) }}
+                            <div class="form-text">Optionnel</div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="fw-bold mb-4" style="color: #1a237e;">
+                        <i class="fa-solid fa-map-pin me-2"></i>Localisation
+                    </h5>
+
+                    <div class="mb-3">
+                        {{ form_label(form.adresse) }}
+                        {{ form_widget(form.adresse) }}
+                        {{ form_errors(form.adresse) }}
+                    </div>
+
+                    <div class="alert alert-info d-flex gap-2 mb-3">
+                        <i class="fa-solid fa-circle-info mt-1"></i>
+                        <div><strong>Astuce :</strong> Utilisez la loupe sur la carte ou cliquez pour placer l'événement.</div>
+                    </div>
+
+                    <div id="map-picker" style="height: 300px; border-radius: 10px; margin-bottom: 1rem; border: 2px solid #dee2e6;"></div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            {{ form_label(form.latitude) }}
+                            {{ form_widget(form.latitude) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_label(form.longitude) }}
+                            {{ form_widget(form.longitude) }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 justify-content-end">
+                        <a href="{{ path('app_evenement_index') }}" class="btn btn-outline-secondary">Annuler</a>
+                        <button type="submit" class="btn px-5" style="background: #1a237e; color: white;">
+                            <i class="fa-solid fa-paper-plane me-2"></i>Publier l'événement
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+<script>
+    const map = L.map('map-picker').setView([49.1829, 0.3707], 8);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    let marker = null;
+    const latInput = document.getElementById('evenement_latitude');
+    const lngInput = document.getElementById('evenement_longitude');
+
+    L.Control.geocoder({
+        defaultMarkGeocode: false,
+        placeholder: 'Rechercher une ville...',
+        geocoder: L.Control.Geocoder.nominatim({
+            geocodingQueryParams: { countrycodes: 'fr' }
+        })
+    })
+    .on('markgeocode', function(e) {
+        const lat = e.geocode.center.lat.toFixed(6);
+        const lng = e.geocode.center.lng.toFixed(6);
+        latInput.value = lat;
+        lngInput.value = lng;
+        map.setView([lat, lng], 13);
+        if (marker) { marker.setLatLng([lat, lng]); }
+        else { marker = L.marker([lat, lng]).addTo(map); }
+        marker.bindPopup('📍 ' + e.geocode.name).openPopup();
+    })
+    .addTo(map);
+
+    map.on('click', function(e) {
+        const lat = e.latlng.lat.toFixed(6);
+        const lng = e.latlng.lng.toFixed(6);
+        latInput.value = lat;
+        lngInput.value = lng;
+        if (marker) { marker.setLatLng(e.latlng); }
+        else { marker = L.marker(e.latlng).addTo(map); }
+        marker.bindPopup('📍 ' + lat + ', ' + lng).openPopup();
+    });
+
+    document.getElementById('evenement_adresse').addEventListener('blur', async function() {
+        const adresse = this.value.trim();
+        if (!adresse || latInput.value) return;
+        try {
+            const response = await fetch(
+                'https://nominatim.openstreetmap.org/search?format=json&q='
+                + encodeURIComponent(adresse + ', France')
+                + '&limit=1&countrycodes=fr',
+                { headers: { 'Accept-Language': 'fr' } }
+            );
+            const data = await response.json();
+            if (data.length > 0) {
+                const lat = parseFloat(data[0].lat).toFixed(6);
+                const lng = parseFloat(data[0].lon).toFixed(6);
+                latInput.value = lat;
+                lngInput.value = lng;
+                map.setView([lat, lng], 13);
+                if (marker) { marker.setLatLng([lat, lng]); }
+                else { marker = L.marker([lat, lng]).addTo(map); }
+                marker.bindPopup('📍 ' + adresse).openPopup();
+            }
+        } catch(e) {}
+    });
+</script>
+{% endblock %}
