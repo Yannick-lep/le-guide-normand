@@ -112,76 +112,82 @@
 {% endblock %}
 
 {% block javascripts %}
-<script>
-    // Carte interactive pour choisir les coordonnées
-    const map = L.map('map-picker').setView([49.1829, 0.3707], 8); // Centre Normandie
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
+<script>
+    const map = L.map('map-picker').setView([49.1829, 0.3707], 8);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
     let marker = null;
-
     const latInput = document.getElementById('lieu_latitude');
     const lngInput = document.getElementById('lieu_longitude');
 
-    // Si des coordonnées existent déjà, placer le marqueur
-    if (latInput.value && lngInput.value) {
-        marker = L.marker([latInput.value, lngInput.value]).addTo(map);
-        map.setView([latInput.value, lngInput.value], 13);
-    }
+    // Barre de recherche sur la carte
+    L.Control.geocoder({
+        defaultMarkGeocode: false,
+        placeholder: 'Rechercher une ville...',
+        geocoder: L.Control.Geocoder.nominatim({
+            geocodingQueryParams: { countrycodes: 'fr' }
+        })
+    })
+    .on('markgeocode', function(e) {
+        const lat = e.geocode.center.lat.toFixed(6);
+        const lng = e.geocode.center.lng.toFixed(6);
+        latInput.value = lat;
+        lngInput.value = lng;
+        map.setView([lat, lng], 13);
+        if (marker) {
+            marker.setLatLng([lat, lng]);
+        } else {
+            marker = L.marker([lat, lng]).addTo(map);
+        }
+        marker.bindPopup('📍 ' + e.geocode.name).openPopup();
+    })
+    .addTo(map);
 
-    // Clic sur la carte → placer le marqueur et remplir les champs
+    // Clic manuel sur la carte
     map.on('click', function(e) {
         const lat = e.latlng.lat.toFixed(6);
         const lng = e.latlng.lng.toFixed(6);
-
         latInput.value = lat;
         lngInput.value = lng;
-
         if (marker) {
             marker.setLatLng(e.latlng);
         } else {
             marker = L.marker(e.latlng).addTo(map);
         }
-
         marker.bindPopup('📍 ' + lat + ', ' + lng).openPopup();
     });
-    // ── Géocodage automatique depuis l'adresse ──
-const adresseInput = document.getElementById('lieu_adresse');
 
-adresseInput.addEventListener('blur', async function() {
-    const adresse = this.value.trim();
-    if (!adresse) return;
-
-    try {
-        const response = await fetch(
-            'https://nominatim.openstreetmap.org/search?format=json&q=' 
-            + encodeURIComponent(adresse + ', Normandie, France')
-            + '&limit=1',
-            { headers: { 'Accept-Language': 'fr' } }
-        );
-        const data = await response.json();
-
-        if (data.length > 0) {
-            const lat = parseFloat(data[0].lat).toFixed(6);
-            const lng = parseFloat(data[0].lon).toFixed(6);
-
-            latInput.value = lat;
-            lngInput.value = lng;
-
-            map.setView([lat, lng], 13);
-
-            if (marker) {
-                marker.setLatLng([lat, lng]);
-            } else {
-                marker = L.marker([lat, lng]).addTo(map);
+    // Géocodage automatique depuis le champ adresse
+    document.getElementById('lieu_adresse').addEventListener('blur', async function() {
+        const adresse = this.value.trim();
+        if (!adresse || latInput.value) return;
+        try {
+            const response = await fetch(
+                'https://nominatim.openstreetmap.org/search?format=json&q='
+                + encodeURIComponent(adresse + ', France')
+                + '&limit=1&countrycodes=fr',
+                { headers: { 'Accept-Language': 'fr' } }
+            );
+            const data = await response.json();
+            if (data.length > 0) {
+                const lat = parseFloat(data[0].lat).toFixed(6);
+                const lng = parseFloat(data[0].lon).toFixed(6);
+                latInput.value = lat;
+                lngInput.value = lng;
+                map.setView([lat, lng], 13);
+                if (marker) {
+                    marker.setLatLng([lat, lng]);
+                } else {
+                    marker = L.marker([lat, lng]).addTo(map);
+                }
+                marker.bindPopup('📍 ' + adresse).openPopup();
             }
-            marker.bindPopup('📍 ' + adresse).openPopup();
-        }
-    } catch (e) {
-        console.log('Géocodage échoué', e);
-    }
-});
+        } catch(e) {}
+    });
 </script>
 {% endblock %}
