@@ -155,22 +155,27 @@
                 <div class="hero-stats d-flex gap-4 flex-wrap">
                     <div class="text-white">
                         <div class="fw-bold fs-3 lh-1" style="color: var(--normand-gold);">
-                            {{ derniers_lieux|length }}+
+                            {{ stats.lieux }}
                         </div>
                         <div class="small opacity-75">Bons plans</div>
                     </div>
                     <div class="text-white">
                         <div class="fw-bold fs-3 lh-1" style="color: var(--normand-gold);">
-                            {{ derniers_terrains|length }}+
+                            {{ stats.terrains }}
                         </div>
                         <div class="small opacity-75">Terrains</div>
                     </div>
                     <div class="text-white">
                         <div class="fw-bold fs-3 lh-1" style="color: var(--normand-gold);">
-                            {{ prochains_evenements|length }}+
+                            {{ stats.evenements }}
                         </div>
                         <div class="small opacity-75">Événements</div>
                     </div>
+                    <div class="text-white">
+                        <div class="fw-bold fs-3 lh-1" style="color: var(--normand-gold);">
+                            {{ stats.membres }}
+                        </div>
+                        <div class="small opacity-75">Membres</div>
                 </div>
             </div>
 
