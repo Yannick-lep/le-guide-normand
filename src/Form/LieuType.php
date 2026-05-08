@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Vich\UploaderBundle\Form\Type\VichImageType; 
 use App\Entity\Categorie;
 use App\Entity\Lieu;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -80,6 +81,14 @@ class LieuType extends AbstractType
                     new NotBlank(message: 'Veuillez choisir une catégorie'),
                 ],
                 'attr' => ['class' => 'form-select'],
+            ])
+            ->add('imageFile', VichImageType::class, [
+                'label'       => 'Photo du lieu',
+                'required'    => false,
+                'allow_delete' => false,
+                'download_uri' => false,
+                'attr'        => ['class' => 'form-control'],
+                'help'        => 'Format JPG, PNG ou WebP. Taille max : 5 Mo.',
             ])
         ;
     }
