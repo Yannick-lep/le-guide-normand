@@ -72,8 +72,7 @@
 				<div class="d-flex justify-content-between align-items-center mb-3">
 					<div>
 						<span class="text-muted">
-							<strong>{{ lieux|length }}</strong>
-							résultat{{ lieux|length > 1 ? 's' : '' }}
+							<strong>{{ lieux.totalItemCount }}</strong> résultat{{ lieux.totalItemCount > 1 ? 's' : '' }}
 							{% if categorieSlug %}
 								dans
 								<strong>{{ categorieSlug }}</strong>
@@ -149,7 +148,12 @@
 						{% endfor %}
 					</div>
 				{% endif %}
-
+				{# Pagination #}
+				{% if lieux.pageCount > 1 %}
+				<div class="d-flex justify-content-center mt-4">
+					{{ knp_pagination_render(lieux, '@KnpPaginator/Pagination/bootsrap_v5.html.twig') }}
+				</div>
+				{% endif %}
 			</div>
 		</div>
 	</div>

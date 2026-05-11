@@ -37,6 +37,27 @@ class LieuRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findByFiltresQuery(?string $categorieSlug = null, ?string $recherche = null): \Doctrine\ORM\Query
+    {
+        $qb = $this->createQueryBuilder('l')
+            ->leftJoin('l.categorie', 'c')
+            ->addSelect('c')
+            ->where('l.estValide = true')
+            ->orderBy('l.createdAt', 'DESC');
+
+        if ($categorieSlug) {
+            $qb->andWhere('c.slug = :slug')
+               ->setParameter('slug', $categorieSlug);
+        }
+
+        if ($recherche) {
+            $qb->andWhere('l.titre LIKE :q OR l.description LIKE :q OR l.adresse LIKE :q ')
+               ->setParameter('q', '%' . $recherche . '%');
+        }
+
+        return $qb->getQuery();
+    }
+
     //    /**
     //     * @return Lieu[] Returns an array of Lieu objects
     //     */

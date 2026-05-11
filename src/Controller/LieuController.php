@@ -7,6 +7,7 @@ use App\Form\LieuType;
 use App\Repository\CategorieRepository;
 use App\Repository\LieuRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,12 +22,20 @@ class LieuController extends AbstractController
     public function index(
         Request $request,
         LieuRepository $lieuRepo,
-        CategorieRepository $categorieRepo
+        CategorieRepository $categorieRepo,
+        PaginatorInterface $paginator
     ): Response {
         $categorieSlug = $request->query->get('categorie');
         $recherche     = $request->query->get('q');
         $categories    = $categorieRepo->findAll();
-        $lieux         = $lieuRepo->findByFiltres($categorieSlug, $recherche);
+
+        $query = $lieuRepo->findByFiltresQuery($categorieSlug, $recherche);
+
+        $lieux = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            9 // 9 lieux par page
+        );
 
         return $this->render('lieu/index.html.twig', [
             'lieux'         => $lieux,
@@ -50,14 +59,14 @@ class LieuController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $lieu->setSlug(strtolower($slugger->slug($lieu->getTitre())));
             $lieu->setCreatedAt(new \DateTimeImmutable());
-            $lieu->setEstValide(true); // validation par admin
+            $lieu->setEstValide(true);
             $lieu->setNombreVues(0);
             $lieu->setUser($this->getUser());
 
             $em->persist($lieu);
             $em->flush();
 
-            $this->addFlash('success', '✅ Votre lieu a été soumis et sera validé prochainement !');
+            $this->addFlash('success', '✅ Votre lieu a été soumis !');
             return $this->redirectToRoute('app_lieu_index');
         }
 
@@ -71,8 +80,7 @@ class LieuController extends AbstractController
         Lieu $lieu,
         EntityManagerInterface $em,
         Request $request
-        ): Response
-    {
+    ): Response {
         $lieu->setNombreVues($lieu->getNombreVues() + 1);
         $em->flush();
 
@@ -83,7 +91,7 @@ class LieuController extends AbstractController
         ]);
 
         return $this->render('lieu/show.html.twig', [
-            'lieu' => $lieu,
+            'lieu'     => $lieu,
             'formAvis' => $formAvis,
         ]);
     }
