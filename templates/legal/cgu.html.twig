@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conditions Générales d'Utilisation — Le Guide Normand{% endblock %}
+
+{% block body %}
+
+<div style="background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 2.5rem 0;">
+    <div class="container">
+        <h1 style="font-family:'Playfair Display',serif;">
+            <i class="fa-solid fa-file-contract me-2"></i>Conditions Générales d'Utilisation
+        </h1>
+        <p class="opacity-75 mb-0">Dernière mise à jour : {{ "now"|date("d/m/Y") }}</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-lg-5">
+
+                    <div class="alert alert-info mb-4">
+                        <i class="fa-solid fa-circle-info me-2"></i>
+                        En utilisant Le Guide Normand, vous acceptez les présentes conditions d'utilisation.
+                    </div>
+
+                    <h4 class="section-title mb-2">1. Objet</h4>
+                    <div class="section-divider"></div>
+                    <p>
+                        Le Guide Normand est une plateforme communautaire permettant aux utilisateurs 
+                        de partager des bons plans, terrains de bivouac et événements en Normandie.
+                        Ces CGU définissent les conditions d'accès et d'utilisation du service.
+                    </p>
+
+                    <h4 class="section-title mb-2 mt-4">2. Inscription</h4>
+                    <div class="section-divider"></div>
+                    <p>L'inscription est gratuite et ouverte à toute personne majeure. En vous inscrivant, vous vous engagez à :</p>
+                    <ul>
+                        <li>Fournir des informations exactes et à jour</li>
+                        <li>Maintenir la confidentialité de votre mot de passe</li>
+                        <li>Ne pas créer plusieurs comptes</li>
+                        <li>Respecter les autres membres de la communauté</li>
+                    </ul>
+
+                    <h4 class="section-title mb-2 mt-4">3. Contenu publié</h4>
+                    <div class="section-divider"></div>
+                    <p>En publiant du contenu sur Le Guide Normand, vous vous engagez à ne pas publier :</p>
+                    <ul>
+                        <li>Des informations fausses ou trompeuses</li>
+                        <li>Du contenu offensant, discriminatoire ou illégal</li>
+                        <li>Des photos dont vous n'êtes pas l'auteur sans autorisation</li>
+                        <li>Des informations personnelles d'autrui sans consentement</li>
+                    </ul>
+                    <p>
+                        L'équipe se réserve le droit de supprimer tout contenu ne respectant pas ces règles.
+                    </p>
+
+                    <h4 class="section-title mb-2 mt-4">4. Terrains et bivouac</h4>
+                    <div class="section-divider"></div>
+                    <p>
+                        Les propriétaires proposant leur terrain sont responsables de l'exactitude 
+                        des informations publiées. Le Guide Normand n'est pas responsable des incidents 
+                        pouvant survenir lors d'un séjour sur un terrain proposé par un membre.
+                    </p>
+                    <p>
+                        Les randonneurs utilisant un terrain s'engagent à le respecter et à laisser 
+                        les lieux propres.
+                    </p>
+
+                    <h4 class="section-title mb-2 mt-4">5. Responsabilité</h4>
+                    <div class="section-divider"></div>
+                    <p>
+                        Le Guide Normand est un projet de formation. L'éditeur ne peut garantir 
+                        l'exactitude, l'exhaustivité ou la disponibilité des informations publiées 
+                        par les membres. L'utilisation des informations se fait sous la responsabilité 
+                        de l'utilisateur.
+                    </p>
+
+                    <h4 class="section-title mb-2 mt-4">6. Modification des CGU</h4>
+                    <div class="section-divider"></div>
+                    <p>
+                        Ces CGU peuvent être modifiées à tout moment. Les utilisateurs seront informés 
+                        des modifications importantes par email.
+                    </p>
+
+                    <h4 class="section-title mb-2 mt-4">7. Contact</h4>
+                    <div class="section-divider"></div>
+                    <p>
+                        Pour toute question concernant ces CGU : 
+                        <a href="mailto:lepinay.yannick@aliceadsl.fr" style="color:var(--normand-red);">
+                            lepinay.yannick@aliceadsl.fr
+                        </a>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

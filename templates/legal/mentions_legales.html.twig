@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions légales — Le Guide Normand{% endblock %}
+
+{% block body %}
+
+<div style="background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 2.5rem 0;">
+    <div class="container">
+        <h1 style="font-family:'Playfair Display',serif;">
+            <i class="fa-solid fa-scale-balanced me-2"></i>Mentions légales
+        </h1>
+        <p class="opacity-75 mb-0">Dernière mise à jour : {{ "now"|date("d/m/Y") }}</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-lg-5">
+
+                    <h4 class="section-title mb-2">Éditeur du site</h4>
+                    <div class="section-divider"></div>
+                    <p>
+                        Le site <strong>Le Guide Normand</strong> est un projet réalisé dans le cadre 
+                        du titre professionnel <strong>Développeur Web et Web Mobile (DWWM)</strong> 
+                        au <strong>CEPPIC</strong>, 194 rue de la Ronce, 76230 Isneauville.
+                    </p>
+                    <p>
+                        <strong>Responsable de publication :</strong> LEPINAY Yannick<br>
+                        <strong>Contact :</strong> lepinay.yannick@aliceadsl.fr
+                    </p>
+
+                    <h4 class="section-title mb-2 mt-4">Hébergement</h4>
+                    <div class="section-divider"></div>
+                    <p>
+                        Ce site est hébergé localement dans le cadre d'un projet de formation.
+                        En cas de mise en production, l'hébergeur sera précisé ici.
+                    </p>
+
+                    <h4 class="section-title mb-2 mt-4">Propriété intellectuelle</h4>
+                    <div class="section-divider"></div>
+                    <p>
+                        L'ensemble du contenu de ce site (textes, images, graphismes, logo) est 
+                        protégé par le droit d'auteur. Toute reproduction sans autorisation est interdite.
+                    </p>
+                    <p>
+                        Les contenus publiés par les utilisateurs restent leur propriété. En les publiant 
+                        sur Le Guide Normand, ils accordent une licence d'utilisation au site.
+                    </p>
+
+                    <h4 class="section-title mb-2 mt-4">Responsabilité</h4>
+                    <div class="section-divider"></div>
+                    <p>
+                        Le Guide Normand est une plateforme communautaire. Les informations publiées 
+                        par les utilisateurs sont sous leur responsabilité. L'éditeur ne peut être tenu 
+                        responsable des contenus publiés par les membres de la communauté.
+                    </p>
+
+                    <h4 class="section-title mb-2 mt-4">Données personnelles</h4>
+                    <div class="section-divider"></div>
+                    <p>
+                        Conformément au RGPD, vous disposez d'un droit d'accès, de rectification 
+                        et de suppression de vos données personnelles. Pour exercer ces droits, 
+                        contactez-nous à l'adresse mentionnée ci-dessus.
+                    </p>
+                    <p>
+                        Consultez notre <a href="{{ path('app_confidentialite') }}" style="color:var(--normand-red);">
+                        politique de confidentialité</a> pour plus d'informations.
+                    </p>
+
+                    <h4 class="section-title mb-2 mt-4">Cookies</h4>
+                    <div class="section-divider"></div>
+                    <p>
+                        Ce site utilise uniquement des cookies techniques nécessaires au fonctionnement 
+                        (session utilisateur). Aucun cookie de tracking ou publicitaire n'est utilisé.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

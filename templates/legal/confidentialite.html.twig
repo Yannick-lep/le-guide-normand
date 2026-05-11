@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Politique de confidentialité — Le Guide Normand{% endblock %}
+
+{% block body %}
+
+<div style="background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 2.5rem 0;">
+    <div class="container">
+        <h1 style="font-family:'Playfair Display',serif;">
+            <i class="fa-solid fa-shield-halved me-2"></i>Politique de confidentialité
+        </h1>
+        <p class="opacity-75 mb-0">Dernière mise à jour : {{ "now"|date("d/m/Y") }}</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-lg-5">
+
+                    <h4 class="section-title mb-2">Données collectées</h4>
+                    <div class="section-divider"></div>
+                    <p>Lors de votre inscription, nous collectons :</p>
+                    <ul>
+                        <li>Votre adresse email (identifiant de connexion)</li>
+                        <li>Votre mot de passe (chiffré, non accessible)</li>
+                        <li>Les informations de profil que vous choisissez de renseigner (prénom, nom, ville, bio)</li>
+                    </ul>
+                    <p>Lors de l'utilisation du service, nous enregistrons :</p>
+                    <ul>
+                        <li>Les lieux, terrains et événements que vous publiez</li>
+                        <li>Les avis que vous laissez</li>
+                    </ul>
+
+                    <h4 class="section-title mb-2 mt-4">Utilisation des données</h4>
+                    <div class="section-divider"></div>
+                    <p>Vos données sont utilisées pour :</p>
+                    <ul>
+                        <li>Gérer votre compte et votre authentification</li>
+                        <li>Afficher votre profil et vos contributions</li>
+                        <li>Vous permettre de publier du contenu</li>
+                    </ul>
+                    <p>
+                        Nous ne vendons pas vos données à des tiers et ne les utilisons 
+                        pas à des fins publicitaires.
+                    </p>
+
+                    <h4 class="section-title mb-2 mt-4">Vos droits (RGPD)</h4>
+                    <div class="section-divider"></div>
+                    <p>Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez des droits suivants :</p>
+                    <ul>
+                        <li><strong>Droit d'accès</strong> : obtenir une copie de vos données</li>
+                        <li><strong>Droit de rectification</strong> : corriger vos données inexactes</li>
+                        <li><strong>Droit à l'effacement</strong> : demander la suppression de votre compte</li>
+                        <li><strong>Droit à la portabilité</strong> : recevoir vos données dans un format standard</li>
+                        <li><strong>Droit d'opposition</strong> : vous opposer au traitement de vos données</li>
+                    </ul>
+                    <p>
+                        Pour exercer ces droits, contactez-nous à :
+                        <a href="mailto:lepinay.yannick@aliceadsl.fr" style="color:var(--normand-red);">
+                            lepinay.yannick@aliceadsl.fr
+                        </a>
+                    </p>
+
+                    <h4 class="section-title mb-2 mt-4">Conservation des données</h4>
+                    <div class="section-divider"></div>
+                    <p>
+                        Vos données sont conservées tant que votre compte est actif. 
+                        En cas de suppression de compte, vos données personnelles sont effacées 
+                        dans un délai de 30 jours.
+                    </p>
+
+                    <h4 class="section-title mb-2 mt-4">Sécurité</h4>
+                    <div class="section-divider"></div>
+                    <p>
+                        Vos mots de passe sont chiffrés avec l'algorithme bcrypt. 
+                        Nous mettons en œuvre les mesures techniques appropriées pour protéger 
+                        vos données contre tout accès non autorisé.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
