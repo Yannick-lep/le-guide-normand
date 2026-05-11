@@ -78,12 +78,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
 
+    /**
+     * @var Collection<int, Lieu>
+     */
+    #[ORM\ManyToMany(targetEntity: Lieu::class, inversedBy: 'favoriUsers')]
+    private Collection $favoriLieux;
+
     public function __construct()
     {
         $this->terrains = new ArrayCollection();
         $this->evenements = new ArrayCollection();
         $this->avis = new ArrayCollection();
         $this->lieux = new ArrayCollection();
+        $this->favoriLieux = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -156,7 +163,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
 
         return $data;
     }
@@ -260,6 +267,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Lieu>
      */
+    public function getFavoriLieux(): Collection
+    {
+        return $this->favoriLieux;
+    }
+
+    public function addFavoriLieux(Lieu $lieu): static
+    {
+        if (!$this->favoriLieux->contains($lieu)) {
+            $this->favoriLieux->add($lieu);
+        }
+        return $this;
+    }
     public function getLieux(): Collection
     {
         return $this->lieux;
@@ -356,6 +375,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->createdAt = $createdAt;
 
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Lieu>
+     */
+    public function getFavoriLieu(): Collection
+    {
+        return $this->favoriLieux;
+    }
+
+    public function addFavoriLieu(Lieu $lieu): static
+    {
+        if (!$this->favoriLieux->contains($lieu)) {
+            $this->favoriLieux->add($lieu);
+        }
+        return $this;
+    }
+
+    public function removeFavoriLieu(Lieu $lieu): static
+    {
+        $this->favoriLieux->removeElement($lieu);
         return $this;
     }
 }

@@ -73,6 +73,7 @@ class Lieu
     {
         $this->evenements = new ArrayCollection();
         $this->avis = new ArrayCollection();
+        $this->favoriUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -290,6 +291,12 @@ class Lieu
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageName = null;
 
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'favoriLieux')]
+    private Collection $favoriUsers;
+
     // Getters/Setters à ajouter
     public function getImageFile(): ?File
     {
@@ -313,6 +320,33 @@ class Lieu
     public function setImageName(?string $imageName): static
     {
         $this->imageName = $imageName;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getFavoriUsers(): Collection
+    {
+        return $this->favoriUsers;
+    }
+
+    public function addFavoriUser(User $favoriUser): static
+    {
+        if (!$this->favoriUsers->contains($favoriUser)) {
+            $this->favoriUsers->add($favoriUser);
+            $favoriUser->addFavoriLieux($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriUser(User $favoriUser): static
+    {
+        if ($this->favoriUsers->removeElement($favoriUser)) {
+            $favoriUser->removeFavoriLieux($this);
+        }
+
         return $this;
     }
 }
