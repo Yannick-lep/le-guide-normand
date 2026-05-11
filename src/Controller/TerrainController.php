@@ -6,6 +6,7 @@ use App\Entity\Terrain;
 use App\Form\TerrainType;
 use App\Repository\TerrainRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +19,8 @@ class TerrainController extends AbstractController
     #[Route('', name: 'index')]
     public function index(
         Request $request,
-        TerrainRepository $terrainRepo
+        TerrainRepository $terrainRepo,
+        PaginatorInterface $paginator
     ): Response {
         $recherche     = $request->query->get('q');
         $filtreDouche  = $request->query->get('douche');
@@ -26,8 +28,18 @@ class TerrainController extends AbstractController
         $filtreWifi    = $request->query->get('wifi');
         $filtreGratuit = $request->query->get('gratuit');
 
-        $terrains = $terrainRepo->findByFiltres(
-            $recherche, $filtreDouche, $filtreElec, $filtreWifi, $filtreGratuit
+        $query = $terrainRepo->findByFiltresQuery(
+            $recherche,
+            $filtreDouche,
+            $filtreElec,
+            $filtreWifi,
+            $filtreGratuit
+        );
+
+        $terrains = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            6
         );
 
         return $this->render('terrain/index.html.twig', [

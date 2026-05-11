@@ -47,6 +47,29 @@ class TerrainRepository extends ServiceEntityRepository
     return $qb->getQuery()->getResult();
     }
 
+    public function findByFiltresQuery(
+        ?string $recherche = null,
+        ?string $douche = null,
+        ?string $electricite = null,
+        ?string $wifi = null,
+        ?string $gratuit = null
+    ): \Doctrine\ORM\Query {
+        $qb = $this->createQueryBuilder('t')
+            ->where('t.estDisponible = true')
+            ->orderBy('t.createdAt', 'DESC');
+
+        if ($recherche) {
+            $qb->andWhere('t.titre LIKE :q OR t.description LIKE :q OR t.adresse LIKE :q')
+               ->setParameter('q', '%' . $recherche . '%');
+        }
+        if ($douche) $qb->andWhere('t.aDouche = true');
+        if ($electricite) $qb->andWhere('t.aElectricite = true');
+        if ($wifi) $qb->andWhere('t.aWifi = true');
+        if ($gratuit) $qb->andWhere('t.prixNuit IS NULL');
+
+        return $qb->getQuery();
+    }
+
     //    /**
     //     * @return Terrain[] Returns an array of Terrain objects
     //     */

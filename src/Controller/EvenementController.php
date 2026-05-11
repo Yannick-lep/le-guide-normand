@@ -6,6 +6,7 @@ use App\Entity\Evenement;
 use App\Form\EvenementType;
 use App\Repository\EvenementRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,13 +19,20 @@ class EvenementController extends AbstractController
     #[Route('', name: 'index')]
     public function index(
         Request $request,
-        EvenementRepository $evenementRepo
+        EvenementRepository $evenementRepo,
+        PaginatorInterface $paginator
     ): Response {
         $recherche     = $request->query->get('q');
         $filtreGratuit = $request->query->get('gratuit');
 
-        $evenements = $evenementRepo->findByFiltres($recherche, $filtreGratuit);
+        $query = $evenementRepo->findByFiltresQuery($recherche, $filtreGratuit);
 
+        $evenements = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            6
+        );
+        
         return $this->render('evenement/index.html.twig', [
             'evenements'    => $evenements,
             'recherche'     => $recherche,
