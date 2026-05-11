@@ -7,7 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: TerrainRepository::class)]
 class Terrain
 {
@@ -270,6 +273,37 @@ class Terrain
             }
         }
 
+        return $this;
+    }
+
+    #[Vich\UploadableField(mapping: 'terrain_image', fileNameProperty: 'imageName')]
+    private ?File $imageFile = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imageName = null;
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile): static
+    {
+        $this->imageFile = $imageFile;
+        if ($imageFile !== null) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
+        return $this;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    public function setImageName(?string $imageName): static
+    {
+        $this->imageName = $imageName;
         return $this;
     }
 }

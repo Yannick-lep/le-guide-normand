@@ -14,6 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class TerrainType extends AbstractType
 {
@@ -80,6 +81,14 @@ class TerrainType extends AbstractType
                 'label'    => 'Wifi disponible',
                 'required' => false,
                 'attr'     => ['class' => 'form-check-input'],
+            ])
+            ->add('imageFile', VichImageType::class, [
+                'label'        => 'Photo du terrain',
+                'required'     => false,
+                'allow_delete' => false,
+                'download_uri' => false,
+                'attr'         => ['class' => 'form-control'],
+                'help'         => 'Format JPG, PNG ou Webp. Taille max : 5 Mo.',
             ])
         ;
     }

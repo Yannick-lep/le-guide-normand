@@ -30,7 +30,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4 p-lg-5">
 
-                    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
 
                     {# Infos générales #}
                     <h5 class="fw-bold mb-4" style="color: var(--normand-green);">
@@ -48,6 +48,12 @@
                         {{ form_widget(form.description) }}
                         {{ form_errors(form.description) }}
                     </div>
+
+                    <div class="mb-4">
+                        {{ form_label(form.imageFile) }}
+                        {{ form_widget(form.imageFile) }}
+                        {{ form_errors(form.imageFile) }}
+                        {{ form_help(form.imageFile) }}
 
                     <div class="row g-3 mb-4">
                         <div class="col-md-8">

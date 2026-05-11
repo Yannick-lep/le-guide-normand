@@ -96,6 +96,17 @@
                 {% for terrain in terrains %}
                 <div class="col-md-6">
                     <div class="card card-normand h-100">
+                        {% if terrain.imageName %}
+                        <img src="/images/terrains/{{ terrain.imageName }}"
+                             alt="{{ terrain.titre }}"
+                             class="card-img-top"
+                             style="height: 160px; object-fit: cover;">
+                        {% else %}
+                        <div class="d-flex align-items-center justify-content-center"
+                             style="height: 160px; background: linear-gradient(135deg, #2D5A27, #1a3a16);">
+                             <i class="fa-solid fa-tent fa-3x text-white opacity-50"></i>
+                        </div>
+                        {% endif %}
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h5 class="fw-bold mb-0">{{ terrain.titre }}</h5>

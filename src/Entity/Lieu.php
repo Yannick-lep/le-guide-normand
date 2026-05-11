@@ -344,7 +344,7 @@ class Lieu
     public function removeFavoriUser(User $favoriUser): static
     {
         if ($this->favoriUsers->removeElement($favoriUser)) {
-            $favoriUser->removeFavoriLieux($this);
+            $favoriUser->removeFavoriLieu($this);
         }
 
         return $this;
