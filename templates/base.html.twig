@@ -292,6 +292,12 @@
 						</a>
 					</li>
 					<li class="nav-item">
+						<a class="nav-link {{ app.request.get('_route') == 'app_evenement_index' ? 'active' : '' }}"
+						   href="{{ path('app_evenement_index') }}">
+						   <i class="fa-solid fa-calendar-days"></i> Événements
+						</a>
+					</li>
+					<li class="nav-item">
 						<a class="nav-link {{ app.request.get('_route') == 'app_carte' ? 'active' : '' }}" href="{{ path('app_carte') }}">
 							<i class="fa-solid fa-map"></i>
 							Carte
