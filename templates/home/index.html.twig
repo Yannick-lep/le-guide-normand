@@ -127,6 +127,13 @@
 				opacity: 0;
 			}
 		}
+		.active-item {
+			transition: background 0.15s;
+			color: var(--normand-text) !important;
+		}
+		.activite-item:hover {
+			background: var(--normand-cream);
+		}
 	</style>
 {% endblock %}
 
@@ -438,7 +445,55 @@
 			</div>
 		</section>
 
-		{# ── CTA ── #}
+		{# --- FIL D'ACTUALITE --- #}
+		{% if activites|length > 0 %}
+		<section class="py-5 reveal">
+			<div class="container">
+				<div class="text-center mb-4">
+					<h2 class="section-title">🔔 Dernières activités</h2>
+					<div class="section-divider mx-auto"></div>
+					<p class="text-muted">Ce que fait la communauté en ce moment</p>
+				</div>
+				<div class="row justify-content-center">
+					<div class="col-lg-8">
+						<div class="card border-0 shadow-sm">
+							<div class="card-body p-0">
+								{% for activite in activites %}
+								<a href="{{ activite.lien }}" class="text-decoration-none">
+									<div class="d-flex align-items-center gap-3 p-3 border-bottom activite-item">
+										<div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+											 style="width:42px; height:42px; background:{{ activite.couleur }}20;">
+											 <i class="fa-solid {{ activite.icone }}" style="color:{{ activite.couleur }};"></i>
+										</div>
+										<div class="flex-grow-1">
+											<div class="small" style="color: var(--normand-text);">
+												{{ activite.message|raw }}
+												{% if activite.note is defined %}
+												<span class="stars ms-1">
+													{% for i in 1..activite.note %}
+														<i class="fa-solid fa-star fa-xs"></i>
+													{% endfor %}
+												</span>
+												{% endif %}
+											</div>
+											<div class="fw-bold small" style="color: var(--normand-text);">
+												{{ activite.titre }}
+											</div>
+										</div>
+										<div class="text-muted" style="font-size:0.75rem; white-space:nowrap;">
+											{{ activite.date|date('d/m/Y') }}
+										</div>
+									</div>
+								</a>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		{% endif %}
+		{# ── CTA ── #}	
 		{% if not app.user %}
 			<section class="py-5 reveal" style="background: var(--normand-red);">
 				<div class="container text-center text-white">
