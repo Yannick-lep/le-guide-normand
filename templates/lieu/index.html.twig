@@ -72,7 +72,8 @@
 				<div class="d-flex justify-content-between align-items-center mb-3">
 					<div>
 						<span class="text-muted">
-							<strong>{{ lieux.totalItemCount }}</strong> résultat{{ lieux.totalItemCount > 1 ? 's' : '' }}
+							<strong>{{ lieux.totalItemCount }}</strong>
+							résultat{{ lieux.totalItemCount > 1 ? 's' : '' }}
 							{% if categorieSlug %}
 								dans
 								<strong>{{ categorieSlug }}</strong>
@@ -122,6 +123,18 @@
 										<p class="text-muted small flex-grow-1 mb-2">
 											{{ lieu.description|slice(0, 90) }}...
 										</p>
+										{% if lieu.noteMoyenne %}
+											<div class="d-flex align-items-center gap-1 mb-2">
+												<div class="stars small">
+													{% for i in 1..5 %}
+														<i class="fa-{{ i <= lieu.noteMoyenne ? 'solid' : 'regular' }} fa-star fa-xs"></i>
+													{% endfor %}
+												</div>
+												<span class="small fw-bold" style="color: var(--normand-gold);">{{ lieu.noteMoyenne }}</span>
+												<span class="small text-muted">({{ lieu.nombreAvis }}
+													avis)</span>
+											</div>
+										{% endif %}
 										<div class="d-flex justify-content-between align-items-center">
 											<small class="text-muted">
 												<i class="fa-solid fa-map-pin me-1"></i>
@@ -138,7 +151,7 @@
 											<i class="fa-solid fa-eye me-1"></i>
 											{{ lieu.nombreVues }}
 											vues
-											                                ·
+																																	                                ·
 											<i class="fa-solid fa-clock me-1"></i>
 											{{ lieu.createdAt|date('d/m/Y') }}
 										</small>
@@ -150,9 +163,9 @@
 				{% endif %}
 				{# Pagination #}
 				{% if lieux.pageCount > 1 %}
-				<div class="d-flex justify-content-center mt-4">
-					{{ knp_pagination_render(lieux, '@KnpPaginator/Pagination/bootsrap_v5.html.twig') }}
-				</div>
+					<div class="d-flex justify-content-center mt-4">
+						{{ knp_pagination_render(lieux, '@KnpPaginator/Pagination/bootsrap_v5.html.twig') }}
+					</div>
 				{% endif %}
 			</div>
 		</div>

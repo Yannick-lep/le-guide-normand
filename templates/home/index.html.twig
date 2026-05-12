@@ -149,12 +149,13 @@
 					</h1>
 					<p class="hero-subtitle mb-4">
 						Randonnées secrètes, restaurants authentiques, terrains de bivouac chez l'habitant...
-						                    Partagés par des passionnés, pour des passionnés.
+												                    Partagés par des passionnés, pour des passionnés.
 					</p>
 					<div class="hero-btns d-flex gap-3 flex-wrap mb-5">
 						<a href="{{ path('app_lieu_index') }}" class="btn btn-light btn-lg px-4 fw-bold" style="color: var(--normand-red);">
 							<i class="fa-solid fa-compass me-2"></i>Explorer
 						</a>
+
 						<a href="{{ path('app_carte') }}" class="btn btn-outline-light btn-lg px-4">
 							<i class="fa-solid fa-map me-2"></i>Voir la carte
 						</a>
@@ -281,174 +282,182 @@
 										<div class="card-img-top d-flex align-items-center justify-content-center" style="height: 180px; background: linear-gradient(135deg, #8B1A1A, #2D5A27);">
 											<i class="fa-solid {{ lieu.categorie ? lieu.categorie.icone : 'fa-map-pin' }} fa-3x text-white opacity-50"></i>
 										</div>
-                                    {% endif %}
-										<div class="card-body d-flex flex-column">
-											<div class="mb-2">
-												<span class="badge-categorie">{{ lieu.categorie ? lieu.categorie.nom : 'Non catégorisé' }}</span>
-											</div>
-											<h6 class="card-title fw-bold">{{ lieu.titre }}</h6>
-											<p class="card-text text-muted small flex-grow-1">{{ lieu.description|slice(0, 90) }}...</p>
-											<div class="d-flex justify-content-between align-items-center mt-2">
-												<small class="text-muted">
-													<i class="fa-solid fa-map-pin me-1"></i>
-													{{ lieu.adresse ?? 'Normandie' }}
-												</small>
-												<a href="{{ path('app_lieu_show', {slug: lieu.slug}) }}" class="btn btn-normand btn-sm">Voir</a>
-											</div>
+									{% endif %}
+									<div class="card-body d-flex flex-column">
+										<div class="mb-2">
+											<span class="badge-categorie">{{ lieu.categorie ? lieu.categorie.nom : 'Non catégorisé' }}</span>
 										</div>
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-					{% endif %}
-				</div>
-			</section>
-
-			{# ── TERRAINS BIVOUAC ── #}
-			<section class="py-5 reveal">
-				<div class="container">
-					<div class="d-flex justify-content-between align-items-end mb-4">
-						<div>
-							<h2 class="section-title mb-1">Terrains pour bivouaquer</h2>
-							<div class="section-divider"></div>
-							<p class="text-muted small">Des particuliers proposent leurs jardins aux randonneurs</p>
-						</div>
-						<a href="{{ path('app_terrain_index') }}" class="btn btn-normand-outline btn-sm">
-							Voir tout
-							<i class="fa-solid fa-arrow-right ms-1"></i>
-						</a>
-					</div>
-
-					{% if derniers_terrains is empty %}
-						<div class="text-center py-4 text-muted">
-							<i class="fa-solid fa-tent fa-3x mb-3 opacity-25"></i>
-							<p>Aucun terrain disponible pour le moment.</p>
-						</div>
-					{% else %}
-						<div class="row g-4">
-							{% for terrain in derniers_terrains %}
-								<div class="col-md-4 reveal">
-									<div class="card card-normand h-100">
-                                        {% if terrain.imageName %}
-                                        <img src="/images/terrains/{{ terrain.imageName }}"
-                                             alt="{{ terrain.titre }}"
-                                             class="card-img-top"
-                                             style="height: 160px; object-fit: cover;">
-                                        {% else %}
-                                        <div class="d-flex align-items-center justify-content-center"
-                                             style="height: 160px; background: linear-gradient(135deg, #2D5A27, #1a3a16);">
-                                             <i class="fa-solid fa-tent fa-3x text-white opacity-50"></i>
-                                        </div>
-                                        {% endif %}
-										<div class="card-body">
-											<h5 class="fw-bold">{{ terrain.titre }}</h5>
-											<p class="text-muted small">{{ terrain.description|slice(0, 80) }}...</p>
-											<div class="d-flex flex-wrap gap-1 mb-3">
-												{% if terrain.aDouche %}
-													<span class="badge bg-success">
-														<i class="fa-solid fa-shower me-1"></i>Douche</span>
-												{% endif %}
-												{% if terrain.aElectricite %}
-													<span class="badge bg-warning text-dark">
-														<i class="fa-solid fa-bolt me-1"></i>Électricité</span>
-												{% endif %}
-												{% if terrain.aToilettes %}
-													<span class="badge bg-info">
-														<i class="fa-solid fa-restroom me-1"></i>Toilettes</span>
-												{% endif %}
-												{% if terrain.aWifi %}
-													<span class="badge bg-primary">
-														<i class="fa-solid fa-wifi me-1"></i>Wifi</span>
-												{% endif %}
-											</div>
-											<div class="d-flex justify-content-between align-items-center">
-												<span class="fw-bold" style="color: var(--normand-green);">
-													{% if terrain.prixNuit %}
-														{{ terrain.prixNuit }}
-														€/nuit
-													{% else %}
-														<span class="text-success">Gratuit</span>
-													{% endif %}
-												</span>
-												<a href="{{ path('app_terrain_show', {id: terrain.id}) }}" class="btn btn-normand btn-sm">Voir</a>
-											</div>
-										</div>
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-					{% endif %}
-				</div>
-			</section>
-
-			{# ── ÉVÉNEMENTS ── #}
-			<section class="py-5 reveal" style="background: var(--normand-cream);">
-				<div class="container">
-					<div class="d-flex justify-content-between align-items-end mb-4">
-						<div>
-							<h2 class="section-title mb-1">Prochains événements</h2>
-							<div class="section-divider"></div>
-						</div>
-						<a href="{{ path('app_evenement_index') }}" class="btn btn-normand-outline btn-sm">
-							Voir tout
-							<i class="fa-solid fa-arrow-right ms-1"></i>
-						</a>
-					</div>
-
-					{% if prochains_evenements is empty %}
-						<div class="text-center py-4 text-muted">
-							<i class="fa-solid fa-calendar-days fa-3x mb-3 opacity-25"></i>
-							<p>Aucun événement prévu pour le moment.</p>
-						</div>
-					{% else %}
-						<div class="row g-4">
-							{% for evenement in prochains_evenements %}
-								<div class="col-md-4 reveal">
-									<div class="card card-normand h-100">
-										<div class="card-body">
-											<div class="d-flex align-items-center gap-2 mb-3">
-												<div class="text-center rounded-2 p-2" style="background: #1a237e; color: white; min-width: 50px;">
-													<div class="fw-bold fs-5 lh-1">{{ evenement.dateDebut|date('d') }}</div>
-													<div class="small text-uppercase">{{ evenement.dateDebut|date('M') }}</div>
+										<h6 class="card-title fw-bold">{{ lieu.titre }}</h6>
+										<p class="card-text text-muted small flex-grow-1">{{ lieu.description|slice(0, 90) }}...</p>
+										{% if lieu.noteMoyenne %}
+											<div class="d-flex align-items-center gap-1 mb-2">
+												<div classs="stars small">
+													{% for i in 1..5 %}
+														<i class="fa-{{ i <= lieu.noteMoyenne ? 'solid' : 'regular' }} fa-star fa-xs"></i>
+													{% endfor %}
 												</div>
-												<h6 class="fw-bold mb-0">{{ evenement.titre }}</h6>
+												<span class="small fw-bold" style="color: var(--normand-gold);">{{ lieu.noteMoyenne }}</span>
+												<span class="small text-muted">({{ lieu.nombreAvis }}
+													avis)</span>
 											</div>
-											<p class="text-muted small">{{ evenement.description|slice(0, 80) }}...</p>
-											<div class="d-flex justify-content-between align-items-center">
-												<span class="badge {{ evenement.estGratuit ? 'bg-success' : 'bg-secondary' }}">
-													{{ evenement.estGratuit ? 'Gratuit' : evenement.prix ~ ' €' }}
-												</span>
-												<a href="{{ path('app_evenement_show', {id: evenement.id}) }}" class="btn btn-normand btn-sm">Voir</a>
-											</div>
+										{% endif %}
+										<div class="d-flex justify-content-between align-items-center mt-2">
+											<small class="text-muted">
+												<i class="fa-solid fa-map-pin me-1"></i>
+												{{ lieu.adresse ?? 'Normandie' }}
+											</small>
+											<a href="{{ path('app_lieu_show', {slug: lieu.slug}) }}" class="btn btn-normand btn-sm">Voir</a>
 										</div>
 									</div>
 								</div>
-							{% endfor %}
-						</div>
-					{% endif %}
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</div>
+		</section>
+
+		{# ── TERRAINS BIVOUAC ── #}
+		<section class="py-5 reveal">
+			<div class="container">
+				<div class="d-flex justify-content-between align-items-end mb-4">
+					<div>
+						<h2 class="section-title mb-1">Terrains pour bivouaquer</h2>
+						<div class="section-divider"></div>
+						<p class="text-muted small">Des particuliers proposent leurs jardins aux randonneurs</p>
+					</div>
+					<a href="{{ path('app_terrain_index') }}" class="btn btn-normand-outline btn-sm">
+						Voir tout
+						<i class="fa-solid fa-arrow-right ms-1"></i>
+					</a>
+				</div>
+
+				{% if derniers_terrains is empty %}
+					<div class="text-center py-4 text-muted">
+						<i class="fa-solid fa-tent fa-3x mb-3 opacity-25"></i>
+						<p>Aucun terrain disponible pour le moment.</p>
+					</div>
+				{% else %}
+					<div class="row g-4">
+						{% for terrain in derniers_terrains %}
+							<div class="col-md-4 reveal">
+								<div class="card card-normand h-100">
+									{% if terrain.imageName %}
+										<img src="/images/terrains/{{ terrain.imageName }}" alt="{{ terrain.titre }}" class="card-img-top" style="height: 160px; object-fit: cover;">
+									{% else %}
+										<div class="d-flex align-items-center justify-content-center" style="height: 160px; background: linear-gradient(135deg, #2D5A27, #1a3a16);">
+											<i class="fa-solid fa-tent fa-3x text-white opacity-50"></i>
+										</div>
+									{% endif %}
+									<div class="card-body">
+										<h5 class="fw-bold">{{ terrain.titre }}</h5>
+										<p class="text-muted small">{{ terrain.description|slice(0, 80) }}...</p>
+										<div class="d-flex flex-wrap gap-1 mb-3">
+											{% if terrain.aDouche %}
+												<span class="badge bg-success">
+													<i class="fa-solid fa-shower me-1"></i>Douche</span>
+											{% endif %}
+											{% if terrain.aElectricite %}
+												<span class="badge bg-warning text-dark">
+													<i class="fa-solid fa-bolt me-1"></i>Électricité</span>
+											{% endif %}
+											{% if terrain.aToilettes %}
+												<span class="badge bg-info">
+													<i class="fa-solid fa-restroom me-1"></i>Toilettes</span>
+											{% endif %}
+											{% if terrain.aWifi %}
+												<span class="badge bg-primary">
+													<i class="fa-solid fa-wifi me-1"></i>Wifi</span>
+											{% endif %}
+										</div>
+										<div class="d-flex justify-content-between align-items-center">
+											<span class="fw-bold" style="color: var(--normand-green);">
+												{% if terrain.prixNuit %}
+													{{ terrain.prixNuit }}
+													€/nuit
+												{% else %}
+													<span class="text-success">Gratuit</span>
+												{% endif %}
+											</span>
+											<a href="{{ path('app_terrain_show', {id: terrain.id}) }}" class="btn btn-normand btn-sm">Voir</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</div>
+		</section>
+
+		{# ── ÉVÉNEMENTS ── #}
+		<section class="py-5 reveal" style="background: var(--normand-cream);">
+			<div class="container">
+				<div class="d-flex justify-content-between align-items-end mb-4">
+					<div>
+						<h2 class="section-title mb-1">Prochains événements</h2>
+						<div class="section-divider"></div>
+					</div>
+					<a href="{{ path('app_evenement_index') }}" class="btn btn-normand-outline btn-sm">
+						Voir tout
+						<i class="fa-solid fa-arrow-right ms-1"></i>
+					</a>
+				</div>
+
+				{% if prochains_evenements is empty %}
+					<div class="text-center py-4 text-muted">
+						<i class="fa-solid fa-calendar-days fa-3x mb-3 opacity-25"></i>
+						<p>Aucun événement prévu pour le moment.</p>
+					</div>
+				{% else %}
+					<div class="row g-4">
+						{% for evenement in prochains_evenements %}
+							<div class="col-md-4 reveal">
+								<div class="card card-normand h-100">
+									<div class="card-body">
+										<div class="d-flex align-items-center gap-2 mb-3">
+											<div class="text-center rounded-2 p-2" style="background: #1a237e; color: white; min-width: 50px;">
+												<div class="fw-bold fs-5 lh-1">{{ evenement.dateDebut|date('d') }}</div>
+												<div class="small text-uppercase">{{ evenement.dateDebut|date('M') }}</div>
+											</div>
+											<h6 class="fw-bold mb-0">{{ evenement.titre }}</h6>
+										</div>
+										<p class="text-muted small">{{ evenement.description|slice(0, 80) }}...</p>
+										<div class="d-flex justify-content-between align-items-center">
+											<span class="badge {{ evenement.estGratuit ? 'bg-success' : 'bg-secondary' }}">
+												{{ evenement.estGratuit ? 'Gratuit' : evenement.prix ~ ' €' }}
+											</span>
+											<a href="{{ path('app_evenement_show', {id: evenement.id}) }}" class="btn btn-normand btn-sm">Voir</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</div>
+		</section>
+
+		{# ── CTA ── #}
+		{% if not app.user %}
+			<section class="py-5 reveal" style="background: var(--normand-red);">
+				<div class="container text-center text-white">
+					<h2 style="font-family:'Playfair Display',serif;" class="mb-3">
+						Vous connaissez un coin secret en Normandie ?
+					</h2>
+					<p class="opacity-75 mb-4">Rejoignez la communauté et partagez vos bons plans.</p>
+					<a href="{{ path('app_register') }}" class="btn btn-light btn-lg px-5" style="color: var(--normand-red); font-weight: 600;">
+						<i class="fa-solid fa-user-plus me-2"></i>Rejoindre gratuitement
+					</a>
 				</div>
 			</section>
+		{% endif %}
 
-			{# ── CTA ── #}
-			{% if not app.user %}
-				<section class="py-5 reveal" style="background: var(--normand-red);">
-					<div class="container text-center text-white">
-						<h2 style="font-family:'Playfair Display',serif;" class="mb-3">
-							Vous connaissez un coin secret en Normandie ?
-						</h2>
-						<p class="opacity-75 mb-4">Rejoignez la communauté et partagez vos bons plans.</p>
-						<a href="{{ path('app_register') }}" class="btn btn-light btn-lg px-5" style="color: var(--normand-red); font-weight: 600;">
-							<i class="fa-solid fa-user-plus me-2"></i>Rejoindre gratuitement
-						</a>
-					</div>
-				</section>
-			{% endif %}
+	{% endblock %}
 
-		{% endblock %}
-
-		{% block javascripts %}
-			<script>
-				// ── Typing effect ──
+	{% block javascripts %}
+		<script>
+			// ── Typing effect ──
 const words = [
 'Normandie',
 'campagne',
@@ -492,5 +501,5 @@ entry.target.classList.add('visible');
 }, {threshold: 0.1});
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-			</script>
-		{% endblock %}
+		</script>
+	{% endblock %}

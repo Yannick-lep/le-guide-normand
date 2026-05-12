@@ -349,4 +349,29 @@ class Lieu
 
         return $this;
     }
+
+    public function getNoteMoyenne(): ?float
+    {
+        if ($this->avis->isEmpty()) return null;
+
+        $total = 0;
+        $count = 0;
+        foreach ($this->avis as $avis) {
+           if ($avis->isEstValide()) {
+            $total += $avis->getNote();
+            $count++;
+           }
+        }
+        if ($count === 0) return null;
+        return round($total / $count, 1);
+    }
+
+    public function getNombreAvis(): int
+    {
+        $count = 0;
+        foreach ($this->avis as $avis) {
+            if ($avis->isEstValide()) $count++;
+        }
+        return $count;
+    }
 }

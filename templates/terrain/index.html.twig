@@ -149,7 +149,17 @@
 												</span>
 											{% endif %}
 										</div>
-
+										{% if terrain.noteMoyenne %}
+										<div class="d-flex align-items-center gap-1 mb-2">
+											<div class="stars small">
+											   {% for i in 1..5 %}
+												  <i class="fa-{{ i <= terrain.noteMoyenne ? 'solid' : 'regular' }} fa-star fa-xs"></i>
+											   {% endfor %}
+											</div>
+											<span class="small fw-bold" style="color: var(--normand-gold);">{{ terrain.noteMoyenne }}</span>
+											<span class="small text-muted">({{ terrain.nombreAvis}} avis)</span>
+										</div>
+										{% endif %}
 										<a href="{{ path('app_terrain_show', {id: terrain.id}) }}" class="btn btn-normand btn-sm w-100">
 											Voir le terrain
 											<i class="fa-solid fa-arrow-right ms-1"></i>

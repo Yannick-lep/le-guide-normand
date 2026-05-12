@@ -306,4 +306,21 @@ class Terrain
         $this->imageName = $imageName;
         return $this;
     }
+
+    public function getNoteMoyenne(): ?float
+    {
+        $avisValides = $this->avis->filter(fn($a) => $a->isEstValide() === true);
+        if ($avisValides->isEmpty()) return null;
+
+        $total = 0;
+        foreach ($avisValides as $avis) {
+            $total += $avis->getNote();
+        }
+        return round($total / $avisValides->count(), 1);
+    }
+
+    public function getNombreAvis(): int
+    {
+        return $this->avis->filter(fn($a) => $a->isEstValide() === true)->count();
+    }
 }
