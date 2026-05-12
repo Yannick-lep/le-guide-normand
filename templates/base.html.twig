@@ -318,7 +318,7 @@
 										<i class="fa-solid fa-user me-2"></i>Mon profil</a>
 								</li>
 								<li>
-									<a class="dropdown-item" href="#">
+									<a class="dropdown-item" href="{{ path('app_profil_index') }}">
 										<i class="fa-solid fa-map-pin me-2"></i>Mes lieux</a>
 								</li>
 								<li>
@@ -426,7 +426,7 @@
 									<i class="fa-solid fa-chevron-right me-1 small"></i>Événements</a>
 							</li>
 							<li>
-								<a href="#">
+								<a href="{{ path('app_carte') }}">
 									<i class="fa-solid fa-chevron-right me-1 small"></i>Carte</a>
 							</li>
 
@@ -448,15 +448,15 @@
 						<h5>Communauté</h5>
 						<ul class="list-unstyled small">
 							<li>
-								<a href="#">
+								<a href="{{ path('app_register') }}">
 									<i class="fa-solid fa-chevron-right me-1 small"></i>S'inscrire</a>
 							</li>
 							<li>
-								<a href="#">
+								<a href="{{ path('app_lieu_new') }}">
 									<i class="fa-solid fa-chevron-right me-1 small"></i>Publier un lieu</a>
 							</li>
 							<li>
-								<a href="#">
+								<a href="{{ path('app_terrain_new') }}">
 									<i class="fa-solid fa-chevron-right me-1 small"></i>Proposer un terrain</a>
 							</li>
 						</ul>
